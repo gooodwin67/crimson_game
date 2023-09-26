@@ -1,4 +1,5 @@
-export const movePlayer = (player, clock, camera) => {
+
+export const movePlayer = (player, clock, camera, city) => {
     let delta = clock.getDelta(); // seconds.
 	let moveDistance = 25*delta; // 200 pixels per second
   
@@ -157,19 +158,34 @@ export const movePlayer = (player, clock, camera) => {
         player.userData.animations.actionStay.play();
     }
 
-    
-
-    
-
-    for (let el in player.userData.goTurn) {
-        //if (player.userData.goTurn[el]) console.log(`${el} -----  ${player.userData.playerTurn} ----- ${anim}`);
-    }
-    console.log(`${player.userData.animations.actionStay.isRunning()} -----${player.userData.animations.actionRunForward.isRunning()} -----${player.userData.animations.actionRunRight.isRunning()}`);
-    //console.log(player.userData.animations.actionRunLeft);
 
 
     camera.position.x = player.position.x;
-    camera.position.z = player.position.z-3;    
+    camera.position.z = player.position.z-3;
+
+    // city.children.forEach(element => {
+        
+    // });
+
+    //var p1 = player.children[0];
+
+    //console.log(p1.geometry);
+
+
+//     for (var vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++)
+// {       
+//         var localVertex = Player.geometry.vertices[vertexIndex].clone();
+//         var globalVertex = Player.matrix.multiplyVector3(localVertex);
+//         var directionVector = globalVertex.subSelf( Player.position );
+
+//         var ray = new THREE.Ray( Player.position, directionVector.clone().normalize() );
+//         var collisionResults = ray.intersectObjects( collidableMeshList );
+//         if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
+//         {
+//             // a collision occurred... do something...
+//         }
+//     }
 }
+
 
 
