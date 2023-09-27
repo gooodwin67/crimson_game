@@ -10,6 +10,7 @@ let playerLoaded = false;
 let worldLoaded = false;
 
 let clock = new THREE.Clock();
+
 let light;
 let mouse = new THREE.Vector2();
 let raycaster = new THREE.Raycaster();
@@ -19,7 +20,10 @@ let plane, player;
 let playerMixers = [];
 let allAnimations = [];
 let playerAll;
+let playerBox = new THREE.Group();
 let clock2 = new THREE.Clock();
+
+let enemy;
 
 let city;
 
@@ -43,7 +47,7 @@ window.addEventListener("resize", (event) => {
 let camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 1000);
 camera.position.set(0, 100, 0);
 
-var ambient = new THREE.AmbientLight( 0xffffff, 0.2 );
+var ambient = new THREE.AmbientLight( 0xffffff, 0.3 );
 scene.add( ambient )
 light = new THREE.PointLight( 0xffffff, 0.7, 700);
 light.position.set(50,50, 100);
@@ -77,6 +81,7 @@ function init() {
     scene.add( gridHelper );
 
     addPlayer();
+    addEnemy();
     addWorld();
  
 };
@@ -87,8 +92,17 @@ function animate() {
 
     gameIsLoaded();
 
-    if (gameLoaded) movePlayer(player, clock, camera);
-    camera.lookAt(player.position);
+    if (gameLoaded) {
+      movePlayer(player, playerBox, camera, city);
+      light.position.set(player.position);
+      camera.lookAt(player.position);
+      if (enemy.position.distanceTo(player.position) < 80) {
+        enemy.position.add(player.position.clone().sub(enemy.position).normalize().multiplyScalar(0.8))
+        enemy.lookAt(player.position);
+
+      }
+    }
+
     
 
     		
@@ -137,11 +151,11 @@ function onDocumentMouseMove( event ) {
     let intersects = raycaster.ray.intersectBox( box1, new THREE.Vector3() );
     
     
-    if (intersects) {
-      player.lookAt(intersects.x, 0, intersects.z);
+    if (intersects && gameLoaded) {
+      playerAll.lookAt(intersects.x, 0, intersects.z);
       //console.log(player.getWorldDirection(new THREE.Vector3()));
       
-      let playerAngle = player.getWorldDirection(new THREE.Vector3());
+      let playerAngle = playerAll.getWorldDirection(new THREE.Vector3());
       if (playerAngle.x <= 0.6 && playerAngle.x >= -0.6 && playerAngle.z >= 0.6) {
         player.userData.playerTurn = 'top';
       }
@@ -184,7 +198,7 @@ function addWorld() {
 
       city = gltf.scene;
       scene.add(city);
-      console.log(gltf.scene)
+      //console.log(gltf.scene)
       
      
 
@@ -223,7 +237,7 @@ function addPlayer() {
   const playerFront = new THREE.Mesh( geometryPlayerFront, materialPlayerFront);
   playerFront.position.set(0,0,10);
 
-  player = new THREE.Group();;
+  player = new THREE.Group();
   player.add( playerFront );
 
   scene.add( player );
@@ -286,6 +300,47 @@ function addPlayer() {
 
 
       player.add(playerAll);
+
+
+      playerBox.name = 'playerBox';
+      const geometryPlayerBoxLeft = new THREE.BoxGeometry(4,15,2);
+      const materialPlayerBoxLeft = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+      const playerBoxLeft = new THREE.Mesh( geometryPlayerBoxLeft, materialPlayerBoxLeft);
+      playerBoxLeft.name = 'playerBoxLeft';
+      playerBoxLeft.position.set(3,0,0);
+      playerBoxLeft.rotation.y = Math.PI/2;
+      playerBox.add( playerBoxLeft );
+
+      const geometryPlayerBoxRight = new THREE.BoxGeometry(4,15,2);
+      const materialPlayerBoxRight = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+      const playerBoxRight = new THREE.Mesh( geometryPlayerBoxRight, materialPlayerBoxRight);
+      playerBoxRight.name = 'playerBoxRight';
+      playerBoxRight.position.set(-3,0,0);
+      playerBoxRight.rotation.y = Math.PI/2;
+      playerBox.add( playerBoxRight );
+
+      const geometryPlayerBoxTop = new THREE.BoxGeometry(4,15,2);
+      const materialPlayerBoxTop = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+      const playerBoxTop = new THREE.Mesh( geometryPlayerBoxTop, materialPlayerBoxTop);
+      playerBoxTop.name = 'playerBoxTop';
+      playerBoxTop.position.set(0,0,3);
+      playerBox.add( playerBoxTop );
+
+      const geometryPlayerBoxBottom = new THREE.BoxGeometry(4,15,2);
+      const materialPlayerBoxBottom = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+      const playerBoxBottom = new THREE.Mesh( geometryPlayerBoxBottom, materialPlayerBoxBottom);
+      playerBoxBottom.name = 'playerBoxBottom';
+      playerBoxBottom.position.set(0,0,-3);
+      playerBox.add( playerBoxBottom );
+
+
+
+
+      player.add(playerBox);
+
+      console.log(player.children.filter(el => el.name == 'playerBox')[0].children.filter(el => el.name == 'playerBoxLeft')[0]);
+
+
       playerLoaded = true;
     
     },
@@ -306,3 +361,22 @@ function addPlayer() {
 /*///////////////////////////////////////////////////////////////////*/
 
 
+
+function addEnemy() {
+  const geometryEnemy = new THREE.BoxGeometry(10,10,10)
+  const materiaEnemy = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
+  let enemyBody = new THREE.Mesh( geometryEnemy, materiaEnemy);
+
+  const geometryEnemyFront = new THREE.BoxGeometry(2,10,2)
+  const materiaEnemyFront = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
+  let enemyFront= new THREE.Mesh( geometryEnemyFront, materiaEnemyFront);
+  
+
+  enemy = new THREE.Group();
+  enemy.add( enemyBody );
+  enemy.add( enemyFront );
+  enemy.position.set(50,0,0);
+  enemyFront.position.set(0,0,10);
+
+  scene.add( enemy );
+}

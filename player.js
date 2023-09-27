@@ -1,11 +1,11 @@
-
-export const movePlayer = (player, clock, camera, city) => {
-    let delta = clock.getDelta(); // seconds.
-	let moveDistance = 25*delta; // 200 pixels per second
+import { detectCollisionCubes } from './detectColisions.js';
+import { detectCollisionCubeAndArray } from './detectColisions.js';
+export const movePlayer = (player, playerBox ,camera, city) => {
+    
+	let moveDistance = 0.8; 
   
     player.position.x -= player.speedX;
     player.position.z += player.speedY;
-
 
     addEventListener("keydown", onkeydown, false);
     function onkeydown(event) {
@@ -47,6 +47,15 @@ export const movePlayer = (player, clock, camera, city) => {
 
     if (player.userData.goTurn.goLeft && !player.userData.goTurn.goRight) {
         player.speedX = -moveDistance;
+        //if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxLeft')[0], city.children[1])) player.speedX =0;
+        city.children.forEach(function(item, index, array) {
+            if (item.name.indexOf('Cube0') >= 0) {
+                if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxLeft')[0], item)) {
+                    player.speedX =0;
+                };
+            }
+        });
+
         switch(player.userData.playerTurn) {
             case 'top':
                 anim = 'animRight'
@@ -66,6 +75,14 @@ export const movePlayer = (player, clock, camera, city) => {
     }
     else if (player.userData.goTurn.goRight && !player.userData.goTurn.goLeft) {
         player.speedX = moveDistance;
+        //if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxRight')[0], city.children[1])) player.speedX =0;
+        city.children.forEach(function(item, index, array) {
+            if (item.name.indexOf('Cube0') >= 0) {
+                if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxRight')[0], item)) {
+                    player.speedX =0;
+                };
+            }
+        });
         switch(player.userData.playerTurn) {
             case 'top':
                 anim = 'animRight'
@@ -92,6 +109,14 @@ export const movePlayer = (player, clock, camera, city) => {
     
     if (player.userData.goTurn.goDown && !player.userData.goTurn.goUp) {
         player.speedY = -moveDistance;
+        //if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxBottom')[0], city.children[1])) player.speedY =0;
+        city.children.forEach(function(item, index, array) {
+            if (item.name.indexOf('Cube0') >= 0) {
+                if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxBottom')[0], item)) {
+                    player.speedY =0;
+                };
+            }
+        });
         switch(player.userData.playerTurn) {
             case 'top':
                 anim = 'animForward'
@@ -112,6 +137,14 @@ export const movePlayer = (player, clock, camera, city) => {
     }
     else if (player.userData.goTurn.goUp && !player.userData.goTurn.goDown) {
         player.speedY = moveDistance;
+        //if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxTop')[0], city.children[1])) player.speedY =0;
+        city.children.forEach(function(item, index, array) {
+            if (item.name.indexOf('Cube0') >= 0) {
+                if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxTop')[0], item)) {
+                    player.speedY =0;
+                };
+            }
+        });
         switch(player.userData.playerTurn) {
             case 'top':
                 anim = 'animForward'
@@ -166,25 +199,11 @@ export const movePlayer = (player, clock, camera, city) => {
     // city.children.forEach(element => {
         
     // });
+    //console.log(city.children[1]);
+    
+    
+    
 
-    //var p1 = player.children[0];
-
-    //console.log(p1.geometry);
-
-
-//     for (var vertexIndex = 0; vertexIndex < Player.geometry.vertices.length; vertexIndex++)
-// {       
-//         var localVertex = Player.geometry.vertices[vertexIndex].clone();
-//         var globalVertex = Player.matrix.multiplyVector3(localVertex);
-//         var directionVector = globalVertex.subSelf( Player.position );
-
-//         var ray = new THREE.Ray( Player.position, directionVector.clone().normalize() );
-//         var collisionResults = ray.intersectObjects( collidableMeshList );
-//         if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) 
-//         {
-//             // a collision occurred... do something...
-//         }
-//     }
 }
 
 
