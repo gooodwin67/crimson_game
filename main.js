@@ -14,6 +14,7 @@ let clock = new THREE.Clock();
 let light;
 let mouse = new THREE.Vector2();
 let raycaster = new THREE.Raycaster();
+const materialLine = new THREE.LineBasicMaterial( { color: 0x0000ff } );
 
 let plane, player;
 
@@ -24,6 +25,10 @@ let playerBox = new THREE.Group();
 let clock2 = new THREE.Clock();
 
 let enemy;
+let enemies;
+
+const raycasterEnemy = new THREE.Raycaster();
+let lineEnemy;
 
 let city;
 
@@ -96,11 +101,8 @@ function animate() {
       movePlayer(player, playerBox, camera, city);
       light.position.set(player.position);
       camera.lookAt(player.position);
-      if (enemy.position.distanceTo(player.position) < 80) {
-        enemy.position.add(player.position.clone().sub(enemy.position).normalize().multiplyScalar(0.8))
-        enemy.lookAt(player.position);
-
-      }
+      
+      fightEnemies();
     }
 
     
@@ -375,8 +377,76 @@ function addEnemy() {
   enemy = new THREE.Group();
   enemy.add( enemyBody );
   enemy.add( enemyFront );
+  enemy.userData.speed = Math.random();
+  enemy.userData.raycaster = new THREE.Raycaster();
+  enemy.userData.rayLine = new THREE.Line( new THREE.BufferGeometry(), materialLine);
+  enemy.userData.rayLine.position.set(0,5,0);
+
   enemy.position.set(50,0,0);
   enemyFront.position.set(0,0,10);
 
-  scene.add( enemy );
+  enemies = [];
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+
+
+  enemies[0].position.set(90, 0, 50);
+  enemies[0].userData.speed = Math.random();
+  enemies[0].userData.raycaster = new THREE.Raycaster();
+  enemies[0].userData.rayLine = new THREE.Line( new THREE.BufferGeometry(), materialLine);
+  enemies[0].userData.rayLine.position.set(0,5,0);
+  enemies[0].userData.direction = new THREE.Vector3();
+  enemies[1].position.set(90, 0, 0);
+  enemies[1].userData.speed = Math.random();
+  enemies[1].userData.raycaster = new THREE.Raycaster();
+  enemies[1].userData.rayLine = new THREE.Line( new THREE.BufferGeometry(), materialLine);
+  enemies[1].userData.rayLine.position.set(0,5,0);
+  enemies[1].userData.direction = new THREE.Vector3();
+
+
+
+  enemies.forEach(element => {
+    //element.userData = enemy.userData;
+    scene.add( element );
+    scene.add( element.userData.rayLine );
+  });
+  
+
+  
+  
+
+
+
+  
+
+}
+
+function fightEnemies() {
+
+  enemies.forEach(element => {
+    if (element.position.distanceTo(player.position) < 80) {
+      element.position.add(player.position.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed));
+      element.lookAt(player.position);
+
+    }
+
+    
+    element.userData.raycaster.set(element.position, element.userData.direction.subVectors(player.position, element.position).normalize());
+    element.userData.rayLine.geometry.setFromPoints(
+      [
+        element.userData.raycaster.ray.origin,
+        element.userData.raycaster.ray.direction,
+      ]
+    );
+    console.log(element.userData.rayLine);
+  });
+
+  // enemies[0].userData.raycaster.set(element.position, element.userData.direction.subVectors(element.position, player.position).normalize());
+  // element.userData.rayLine.geometry.setFromPoints(
+  //   [
+  //     element.userData.raycaster.ray.origin,
+  //     element.userData.raycaster.ray.direction,
+  //   ]
+  // );
+
 }
