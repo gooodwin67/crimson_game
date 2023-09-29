@@ -14,7 +14,7 @@ let clock = new THREE.Clock();
 let light;
 let mouse = new THREE.Vector2();
 let raycaster = new THREE.Raycaster();
-const materialLine = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+const materialLine = new THREE.LineBasicMaterial( { color: 0xff00ff } );
 
 let plane, player;
 
@@ -33,8 +33,8 @@ let lineEnemy;
 let city;
 
 let scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0xffffff);
-scene.background = new THREE.Color("white");
+//scene.fog = new THREE.Fog(0xffffff);
+//scene.background = new THREE.Color("white");
 
 let renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
@@ -49,17 +49,18 @@ window.addEventListener("resize", (event) => {
   renderer.setSize(innerWidth, innerHeight);
 });
 
-let camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 1000);
-camera.position.set(0, 100, 0);
+let camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 10000);
+camera.position.set(0, 150, 0);
+//camera.lookAt(0,0,0);
 
-var ambient = new THREE.AmbientLight( 0xffffff, 0.3 );
+var ambient = new THREE.AmbientLight( 0xffffff );
 scene.add( ambient )
 light = new THREE.PointLight( 0xffffff, 0.7, 700);
 light.position.set(50,50, 100);
 light.castShadow = true;
 scene.add( light );
 
-//let controls = new OrbitControls(camera, renderer.domElement);
+let controls = new OrbitControls(camera, renderer.domElement);
 //controls.enableDamping = true;
 //controls.target.set(0, 5, 0);
 
@@ -99,7 +100,7 @@ function animate() {
 
     if (gameLoaded) {
       movePlayer(player, playerBox, camera, city);
-      light.position.set(player.position);
+      light.position.set(player.position.x, 100, player.position.z);
       camera.lookAt(player.position);
       
       fightEnemies();
@@ -200,7 +201,7 @@ function addWorld() {
 
       city = gltf.scene;
       scene.add(city);
-      //console.log(gltf.scene)
+      
       
      
 
@@ -377,47 +378,29 @@ function addEnemy() {
   enemy = new THREE.Group();
   enemy.add( enemyBody );
   enemy.add( enemyFront );
-  enemy.userData.speed = Math.random();
-  enemy.userData.raycaster = new THREE.Raycaster();
-  enemy.userData.rayLine = new THREE.Line( new THREE.BufferGeometry(), materialLine);
-  enemy.userData.rayLine.position.set(0,5,0);
-
-  enemy.position.set(50,0,0);
   enemyFront.position.set(0,0,10);
 
   enemies = [];
   enemies.push(enemy.clone());
   enemies.push(enemy.clone());
+  enemies.forEach((el)=>{
+    el.userData.speed = Math.random();
+    el.userData.raycaster = new THREE.Raycaster();
+    el.userData.rayLine = new THREE.Line( new THREE.BufferGeometry(), materialLine);
+    el.userData.rayLine.frustumCulled = false;
+    el.userData.rayLine.position.set(0,5,0);
+    el.userData.direction = new THREE.Vector3();
+    el.userData.far = new THREE.Vector3();
+
+    el.userData.intersectWorld = false;
+
+    scene.add( el );
+    scene.add( el.userData.rayLine );
+  });
 
 
   enemies[0].position.set(90, 0, 50);
-  enemies[0].userData.speed = Math.random();
-  enemies[0].userData.raycaster = new THREE.Raycaster();
-  enemies[0].userData.rayLine = new THREE.Line( new THREE.BufferGeometry(), materialLine);
-  enemies[0].userData.rayLine.position.set(0,5,0);
-  enemies[0].userData.direction = new THREE.Vector3();
   enemies[1].position.set(90, 0, 0);
-  enemies[1].userData.speed = Math.random();
-  enemies[1].userData.raycaster = new THREE.Raycaster();
-  enemies[1].userData.rayLine = new THREE.Line( new THREE.BufferGeometry(), materialLine);
-  enemies[1].userData.rayLine.position.set(0,5,0);
-  enemies[1].userData.direction = new THREE.Vector3();
-
-
-
-  enemies.forEach(element => {
-    //element.userData = enemy.userData;
-    scene.add( element );
-    scene.add( element.userData.rayLine );
-  });
-  
-
-  
-  
-
-
-
-  
 
 }
 
@@ -425,28 +408,35 @@ function fightEnemies() {
 
   enemies.forEach(element => {
     if (element.position.distanceTo(player.position) < 80) {
-      element.position.add(player.position.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed));
-      element.lookAt(player.position);
-
+      if (!element.userData.intersectWorld) {
+        element.position.add(player.position.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed));
+        element.lookAt(player.position);
+      }
+      element.userData.intersectWorld = false;
     }
 
-    
-    element.userData.raycaster.set(element.position, element.userData.direction.subVectors(player.position, element.position).normalize());
+    element.userData.raycaster.set(player.position, element.userData.direction.subVectors(element.position, player.position).normalize());
+    element.userData.raycaster.far = new THREE.Vector3().subVectors(element.position, player.position).length();
+
     element.userData.rayLine.geometry.setFromPoints(
       [
-        element.userData.raycaster.ray.origin,
-        element.userData.raycaster.ray.direction,
+        player.position,
+        element.position,
       ]
     );
-    console.log(element.userData.rayLine);
+
+
+
+    city.children.forEach(function(item, index, array) {
+      if (item.name.indexOf('Cube0') >= 0 && element.userData.raycaster.intersectObject(item).length > 0) {
+        element.userData.intersectWorld = true;
+      }
+    });
+    //console.log(enemies[0].userData.intersectWorld);
+
+
+    
   });
 
-  // enemies[0].userData.raycaster.set(element.position, element.userData.direction.subVectors(element.position, player.position).normalize());
-  // element.userData.rayLine.geometry.setFromPoints(
-  //   [
-  //     element.userData.raycaster.ray.origin,
-  //     element.userData.raycaster.ray.direction,
-  //   ]
-  // );
 
 }
