@@ -1,5 +1,4 @@
 import { detectCollisionCubes } from './detectColisions.js';
-import { detectCollisionCubeAndArray } from './detectColisions.js';
 export const movePlayer = (player, playerBox ,camera, city) => {
     
 	let moveDistance = 0.8; 

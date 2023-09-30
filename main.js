@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { movePlayer } from './player.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { detectCollisionCubes } from './detectColisions.js';
 
 import { OrbitControls } from "three/addons/controls/OrbitControls";
 
@@ -373,6 +374,17 @@ function addEnemy() {
   const geometryEnemyFront = new THREE.BoxGeometry(2,10,2)
   const materiaEnemyFront = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
   let enemyFront= new THREE.Mesh( geometryEnemyFront, materiaEnemyFront);
+
+
+  const geometryenemyBoxTop = new THREE.BoxGeometry(16,30,8);
+  const materialenemyBoxTop = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+  const enemyBoxTop = new THREE.Mesh( geometryenemyBoxTop, materialenemyBoxTop);
+  enemyBoxTop.name = 'enemyBoxTop';
+  enemyBoxTop.position.set(0,0,5);
+  
+
+
+
   
 
   enemy = new THREE.Group();
@@ -391,11 +403,18 @@ function addEnemy() {
     el.userData.rayLine.position.set(0,5,0);
     el.userData.direction = new THREE.Vector3();
     el.userData.far = new THREE.Vector3();
+    el.userData.angle = 0;
+    el.userData.turn = 'top';
+    el.userData.canWalk = true;
+    el.userData.enemyBoxTop = enemyBoxTop.clone();
+
+    el.add(enemy.userData.enemyBoxTop);
 
     el.userData.intersectWorld = false;
 
     scene.add( el );
     scene.add( el.userData.rayLine );
+    scene.add( el.userData.enemyBoxTop );
   });
 
 
@@ -405,11 +424,11 @@ function addEnemy() {
 }
 
 function fightEnemies() {
-
+  enemy.userData.canWalk = true;
   enemies.forEach(element => {
-    if (element.position.distanceTo(player.position) < 80) {
+    if (element.position.distanceTo(player.position) < 180) {
       if (!element.userData.intersectWorld) {
-        element.position.add(player.position.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed));
+        element.position.add(player.position.clone().sub(element.position).normalize().multiplyScalar(/*element.userData.speed*/0.6));
         element.lookAt(player.position);
       }
       element.userData.intersectWorld = false;
@@ -424,17 +443,47 @@ function fightEnemies() {
         element.position,
       ]
     );
+    
 
-
+    element.userData.angle = element.getWorldDirection(new THREE.Vector3());
+    if (element.userData.angle.x <= 0.6 && element.userData.angle.x >= -0.6 && element.userData.angle.z >= 0.6) {
+      element.userData.turn = 'top';
+    }
+    else if(element.userData.angle.x <= 0.6 && element.userData.angle.z <= 0.6 && element.userData.angle.z >= -0.6) {
+      element.userData.turn = 'right';
+    }
+    else if(element.userData.angle.x >= -0.6 && element.userData.angle.x <= 0.6 && element.userData.angle.z <= -0.6) {
+      element.userData.turn = 'down';
+    }
+    else if(element.userData.angle.x >= 0.6 && element.userData.angle.z <= 0.6 && element.userData.angle.z >= -0.6) {
+      element.userData.turn = 'left';
+    }
 
     city.children.forEach(function(item, index, array) {
-      if (item.name.indexOf('Cube0') >= 0 && element.userData.raycaster.intersectObject(item).length > 0) {
-        element.userData.intersectWorld = true;
+      // if (item.name.indexOf('Cube0') >= 0 && element.userData.raycaster.intersectObject(item).length > 0) {
+      //   element.userData.intersectWorld = true;
+      // }
+
+      if (item.name.indexOf('Cube0') >= 0 && detectCollisionCubes(element.children[0], item)) {
+          if (element.userData.turn == 'top') {
+            element.position.z = element.position.z-0.6;
+          }
+          if (element.userData.turn == 'down') {
+            element.position.z = element.position.z+0.6;
+          }
+          if (element.userData.turn == 'left') {
+            element.position.x = element.position.x-0.6;
+          }
+          else if (element.userData.turn == 'right') {
+            element.position.x = element.position.x+0.6;
+          }
       }
+      
+
     });
-    //console.log(enemies[0].userData.intersectWorld);
 
 
+    //console.log(element.userData.turn);
     
   });
 
