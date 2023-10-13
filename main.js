@@ -92,11 +92,12 @@ function init() {
 
     const gridHelper = new THREE.GridHelper( size, divisions );
     gridHelper.position.y = 2;
-    scene.add( gridHelper );
+    //scene.add( gridHelper );
 
+    addWorld();
     addPlayer();
     addEnemy();
-    addWorld();
+    
  
 };
 
@@ -439,8 +440,8 @@ function addEnemy() {
 
   enemies = [];
   enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
+  // enemies.push(enemy.clone());
+  // enemies.push(enemy.clone());
   // enemies.push(enemy.clone());
   // enemies.push(enemy.clone());
   // enemies.push(enemy.clone());
@@ -506,8 +507,8 @@ function addEnemy() {
 
 
   enemies[0].position.set(90, 0, 50);
-  enemies[1].position.set(90, 0, 0);
-  enemies[2].position.set(120, 0, 0);
+  // enemies[1].position.set(90, 0, 0);
+  // enemies[2].position.set(120, 0, 0);
   // enemies[3].position.set(40, 0, 100);
   // enemies[4].position.set(100, 0, 0);
   // enemies[5].position.set(90, 0, 50);
@@ -566,46 +567,82 @@ function fightEnemies() {
     }
 
 
-    // if (!element.userData.idle) {
-    //   element.userData.rayLine.geometry.setFromPoints(
-    //     [
-    //       element.position,
-    //       element.userData.raycaster.ray.origin
-    //     ]
-    //   );
-    //   element.userData.rayLine2.geometry.setFromPoints(
-    //     [
-    //       element.position,
-    //       element.userData.seeRaycaster.ray.origin
-    //     ]
-    //   );
-    // }
-    // else {
-    //   element.userData.rayLine3.geometry.setFromPoints(
-    //     [
-    //       element.position,
-    //       element.userData.idleRaycaster.ray.origin
-    //     ]
-    //   );
-    // }
+    if (!element.userData.idle) {
+      element.userData.rayLine.geometry.setFromPoints(
+        [
+          element.position,
+          element.userData.raycaster.ray.origin
+        ]
+      );
+      element.userData.rayLine2.geometry.setFromPoints(
+        [
+          element.position,
+          element.userData.seeRaycaster.ray.origin
+        ]
+      );
+    }
+    else {
+      element.userData.rayLine3.geometry.setFromPoints(
+        [
+          element.position,
+          element.userData.idleRaycaster.ray.origin
+        ]
+      );
+    }
 
     
 
 
     //element.userData.intersectWorld = false;
 
+    //console.log(`${element.userData.seePlayer} ---- ${element.userData.hearPlayer}`);
+
     if (element.userData.seePlayer && element.userData.hearPlayer && !element.userData.idle) {
-      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed));
+      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
       element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
     }
     else if (!element.userData.seePlayer && element.userData.hearPlayer && !element.userData.idle){
-      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed));
+      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
       element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
     }
     else if (!element.userData.hearPlayer && !element.userData.idle){
-      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed));
+      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
       element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
     }
+    
+
+    else if (element.userData.idle) {
+      let timeIdleTurn = Math.random();
+      let idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z);
+      if (timeIdleTurn > 0.999) {
+        element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
+        
+      }
+      if (element.userData.turn == 'top') {
+        idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z + 50);
+      }
+      else if (element.userData.turn == 'down') {
+        idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z - 50);
+      }
+      else if (element.userData.turn == 'left') {
+        idleTurn = new THREE.Vector3(element.position.x+50, element.position.y, element.position.z);
+      }
+      else if (element.userData.turn == 'right') {
+        idleTurn = new THREE.Vector3(element.position.x-50, element.position.y, element.position.z);
+      }
+      
+      
+
+      element.userData.idleRaycaster.set(idleTurn, element.position.clone().normalize());
+      element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.idleRaycaster.ray.origin);
+
+
+
+      element.position.add(element.userData.idleRaycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/3));
+      
+      //console.log(element.userData.idle);
+    }
+
     
 
     
@@ -620,44 +657,14 @@ function fightEnemies() {
     city.children.forEach(function(item, index, array) {
       
       if (item.name.indexOf('building') >= 0) {
+        
 
         if (element.userData.raycaster.intersectObject(item).length > 0 && element.userData.seeRaycaster.intersectObject(item).length > 0) {
           element.userData.seePlayer = false;
+          
         } 
         
       }
-      
-      if (element.userData.idle) {
-        let timeIdleTurn = Math.random();
-        let idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z);
-        if (timeIdleTurn > 0.999) {
-          element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
-          
-        }
-        if (element.userData.turn == 'top') {
-          idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z + element.userData.speed/10);
-        }
-        else if (element.userData.turn == 'down') {
-          idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z - element.userData.speed/10);
-        }
-        else if (element.userData.turn == 'left') {
-          idleTurn = new THREE.Vector3(element.position.x+element.userData.speed/10, element.position.y, element.position.z);
-        }
-        else if (element.userData.turn == 'right') {
-          idleTurn = new THREE.Vector3(element.position.x-element.userData.speed/10, element.position.y, element.position.z);
-        }
-        
-        
-  
-        element.userData.idleRaycaster.set(idleTurn, element.position.clone().normalize());
-        element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.idleRaycaster.ray.origin);
-
-        // element.userData.idleRaycaster.far = new THREE.Vector3().subVectors(element.position, new THREE.Vector3(element.position.x-20, element.position.y, element.position.z)).length();
-
-        element.position.add(element.userData.idleRaycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/15));
-        //console.log(element.userData.idle);
-      }
-
       
 
 
@@ -677,11 +684,6 @@ function fightEnemies() {
           element.position.z += element.userData.speed;
           element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
         };
-
-      
-
-
-      
 
     });
     
