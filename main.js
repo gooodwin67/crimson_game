@@ -111,6 +111,10 @@ function animate() {
       light.position.set(player.position.x, 100, player.position.z);
       camera.lookAt(player.position);
       
+      //console.log(detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxLeft')[0], city.children[2]));
+
+
+      
       fightEnemies();
     }
 
@@ -196,11 +200,11 @@ function addWorld() {
   var loader = new GLTFLoader();
 
   loader.load(
-    'models/world/city.gltf',
+    'models/world/world3.gltf',
     function ( gltf ) {
       
-      gltf.scene.scale.set(20,20,20);
-      gltf.scene.position.set(0,20,0);
+      //gltf.scene.scale.set(100,100,100);
+      //gltf.scene.position.set(0,230,0);
       
       gltf.animations; // Array<THREE.AnimationClip>
       gltf.scene; // THREE.Scene
@@ -210,6 +214,7 @@ function addWorld() {
 
       city = gltf.scene;
       scene.add(city);
+      console.log(city);
       
       
      
@@ -349,8 +354,9 @@ function addPlayer() {
 
 
       player.add(playerBox);
+      player.position.x = -120;
 
-      console.log(player.children.filter(el => el.name == 'playerBox')[0].children.filter(el => el.name == 'playerBoxLeft')[0]);
+      //console.log(player.children.filter(el => el.name == 'playerBox')[0].children.filter(el => el.name == 'playerBoxLeft')[0]);
 
 
       playerLoaded = true;
@@ -613,7 +619,7 @@ function fightEnemies() {
     element.userData.seePlayer = true;
     city.children.forEach(function(item, index, array) {
       
-      if (item.name.indexOf('Cube00') >= 0) {
+      if (item.name.indexOf('building') >= 0) {
 
         if (element.userData.raycaster.intersectObject(item).length > 0 && element.userData.seeRaycaster.intersectObject(item).length > 0) {
           element.userData.seePlayer = false;
@@ -655,19 +661,19 @@ function fightEnemies() {
       
 
 
-        if (item.name.indexOf('Cube0') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxLeft')[0], item)) {
+        if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxLeft')[0], item)) {
           element.position.x -= element.userData.speed;
           element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
         };
-        if (item.name.indexOf('Cube0') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxRight')[0], item)) {
+        if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxRight')[0], item)) {
           element.position.x += element.userData.speed;
           element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
         };
-        if (item.name.indexOf('Cube0') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxTop')[0], item)) {
+        if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxTop')[0], item)) {
           element.position.z -= element.userData.speed;
           element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
         };
-        if (item.name.indexOf('Cube0') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxBottom')[0], item)) {
+        if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxBottom')[0], item)) {
           element.position.z += element.userData.speed;
           element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
         };

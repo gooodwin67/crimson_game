@@ -48,7 +48,7 @@ export const movePlayer = (player, playerBox ,camera, city) => {
         player.speedX = -moveDistance;
         //if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxLeft')[0], city.children[1])) player.speedX =0;
         city.children.forEach(function(item, index, array) {
-            if (item.name.indexOf('Cube0') >= 0) {
+            if (item.name.indexOf('building') >= 0) {
                 if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxLeft')[0], item)) {
                     player.speedX =0;
                 };
@@ -76,7 +76,7 @@ export const movePlayer = (player, playerBox ,camera, city) => {
         player.speedX = moveDistance;
         //if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxRight')[0], city.children[1])) player.speedX =0;
         city.children.forEach(function(item, index, array) {
-            if (item.name.indexOf('Cube0') >= 0) {
+            if (item.name.indexOf('building') >= 0) {
                 if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxRight')[0], item)) {
                     player.speedX =0;
                 };
@@ -110,7 +110,7 @@ export const movePlayer = (player, playerBox ,camera, city) => {
         player.speedY = -moveDistance;
         //if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxBottom')[0], city.children[1])) player.speedY =0;
         city.children.forEach(function(item, index, array) {
-            if (item.name.indexOf('Cube0') >= 0) {
+            if (item.name.indexOf('building') >= 0) {
                 if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxBottom')[0], item)) {
                     player.speedY =0;
                 };
@@ -138,7 +138,7 @@ export const movePlayer = (player, playerBox ,camera, city) => {
         player.speedY = moveDistance;
         //if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxTop')[0], city.children[1])) player.speedY =0;
         city.children.forEach(function(item, index, array) {
-            if (item.name.indexOf('Cube0') >= 0) {
+            if (item.name.indexOf('building') >= 0) {
                 if (detectCollisionCubes(playerBox.children.filter(el => el.name == 'playerBoxTop')[0], item)) {
                     player.speedY =0;
                 };
