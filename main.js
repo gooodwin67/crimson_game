@@ -205,7 +205,7 @@ function addWorld() {
     function ( gltf ) {
       
       //gltf.scene.scale.set(100,100,100);
-      //gltf.scene.position.set(0,230,0);
+      gltf.scene.position.set(0,0,0);
       
       gltf.animations; // Array<THREE.AnimationClip>
       gltf.scene; // THREE.Scene
@@ -356,6 +356,7 @@ function addPlayer() {
 
       player.add(playerBox);
       player.position.x = -120;
+      player.position.y = 0;
 
       //console.log(player.children.filter(el => el.name == 'playerBox')[0].children.filter(el => el.name == 'playerBoxLeft')[0]);
 
@@ -558,11 +559,11 @@ function fightEnemies() {
       element.userData.raycaster.set(player.position, element.userData.direction.subVectors(element.position, player.position).normalize());
       element.userData.raycaster.far = new THREE.Vector3().subVectors(element.position, player.position).length();
 
-      element.userData.seeRaycaster.set(player.position, element.userData.direction.subVectors(element.position, player.position).normalize());
+      element.userData.seeRaycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
       element.userData.seeRaycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.raycaster.ray.origin).length();
     }
     else if (element.userData.hearPlayer && !element.userData.seePlayer && !element.userData.idle) {
-      element.userData.seeRaycaster.set(player.position, element.userData.direction.subVectors(element.position, player.position).normalize());
+      element.userData.seeRaycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
       element.userData.seeRaycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.seeRaycaster.ray.origin).length();
     }
 
@@ -594,8 +595,18 @@ function fightEnemies() {
 
 
     //element.userData.intersectWorld = false;
+    
+    console.log(element.userData.seePlayer);
+    
 
     //console.log(`${element.userData.seePlayer} ---- ${element.userData.hearPlayer}`);
+    if (element.userData.seeRaycaster.intersectObjects(city.children.filter((el)=>el.name.indexOf('building')>=0)).length>0) {
+      element.userData.seePlayer = false;
+      //console.log(element.userData.seeRaycaster.intersectObjects(city.children.filter((el)=>el.name.indexOf('building')>=0))[0].object.name);
+    }
+    else {element.userData.seePlayer = true}
+    
+    
 
     if (element.userData.seePlayer && element.userData.hearPlayer && !element.userData.idle) {
       element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
@@ -611,7 +622,7 @@ function fightEnemies() {
     }
     
 
-    else if (element.userData.idle) {
+    if (element.userData.idle) {
       let timeIdleTurn = Math.random();
       let idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z);
       if (timeIdleTurn > 0.999) {
@@ -653,7 +664,7 @@ function fightEnemies() {
 
 
     
-    element.userData.seePlayer = true;
+    
     city.children.forEach(function(item, index, array) {
       
       if (item.name.indexOf('building') >= 0) {
