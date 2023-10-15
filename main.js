@@ -551,6 +551,7 @@ function fightEnemies() {
     }
     else {
       element.userData.hearPlayer = false;
+      //element.userData.idle = true;
       
     }
 
@@ -562,10 +563,10 @@ function fightEnemies() {
       element.userData.seeRaycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
       element.userData.seeRaycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.raycaster.ray.origin).length();
     }
-    else if (element.userData.hearPlayer && !element.userData.seePlayer && !element.userData.idle) {
-      element.userData.seeRaycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
-      element.userData.seeRaycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.seeRaycaster.ray.origin).length();
-    }
+    // else if (element.userData.hearPlayer && !element.userData.seePlayer && !element.userData.idle) {
+    //   element.userData.seeRaycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
+    //   element.userData.seeRaycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.seeRaycaster.ray.origin).length();
+    // }
 
 
     if (!element.userData.idle) {
@@ -596,7 +597,7 @@ function fightEnemies() {
 
     //element.userData.intersectWorld = false;
     
-    console.log(element.userData.seePlayer);
+    console.log(element.userData.idle);
     
 
     //console.log(`${element.userData.seePlayer} ---- ${element.userData.hearPlayer}`);
@@ -620,6 +621,7 @@ function fightEnemies() {
       element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
       element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
     }
+
     
 
     if (element.userData.idle) {
@@ -657,7 +659,7 @@ function fightEnemies() {
     
 
     
-    if (element.position.distanceTo(element.userData.raycaster.ray.origin) < 4) {
+    if (element.position.distanceTo(element.userData.raycaster.ray.origin) < 4 || !element.userData.seePlayer) {
       element.userData.idle = true;
       
     }
