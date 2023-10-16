@@ -195,10 +195,7 @@ export const movePlayer = (player, playerBox ,camera, city) => {
     camera.position.x = player.position.x;
     camera.position.z = player.position.z-3;
 
-    // city.children.forEach(element => {
-        
-    // });
-    //console.log(city.children[1]);
+
     
     
     

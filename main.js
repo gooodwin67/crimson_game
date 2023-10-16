@@ -395,7 +395,7 @@ function addEnemy() {
 
   
   enemyBox.name = 'enemyBox';
-  const geometryenemyBoxLeft = new THREE.BoxGeometry(1,15,2);
+  const geometryenemyBoxLeft = new THREE.BoxGeometry(2,25,2);
   const materialenemyBoxLeft = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
   const enemyBoxLeft = new THREE.Mesh( geometryenemyBoxLeft, materialenemyBoxLeft);
   enemyBoxLeft.name = 'enemyBoxLeft';
@@ -403,7 +403,7 @@ function addEnemy() {
   enemyBoxLeft.rotation.y = Math.PI/2;
   enemyBox.add( enemyBoxLeft );
 
-  const geometryenemyBoxRight = new THREE.BoxGeometry(1,15,2);
+  const geometryenemyBoxRight = new THREE.BoxGeometry(2,25,2);
   const materialenemyBoxRight = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
   const enemyBoxRight = new THREE.Mesh( geometryenemyBoxRight, materialenemyBoxRight);
   enemyBoxRight.name = 'enemyBoxRight';
@@ -411,14 +411,14 @@ function addEnemy() {
   enemyBoxRight.rotation.y = Math.PI/2;
   enemyBox.add( enemyBoxRight );
 
-  const geometryenemyBoxTop = new THREE.BoxGeometry(1,15,2);
+  const geometryenemyBoxTop = new THREE.BoxGeometry(2,25,2);
   const materialenemyBoxTop = new THREE.MeshPhongMaterial( { color: 0x000000 } );
   const enemyBoxTop = new THREE.Mesh( geometryenemyBoxTop, materialenemyBoxTop);
   enemyBoxTop.name = 'enemyBoxTop';
   enemyBoxTop.position.set(0,0,4);
   enemyBox.add( enemyBoxTop );
 
-  const geometryenemyBoxBottom = new THREE.BoxGeometry(1,15,2);
+  const geometryenemyBoxBottom = new THREE.BoxGeometry(2,25,2);
   const materialenemyBoxBottom = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
   const enemyBoxBottom = new THREE.Mesh( geometryenemyBoxBottom, materialenemyBoxBottom);
   enemyBoxBottom.name = 'enemyBoxBottom';
@@ -441,20 +441,20 @@ function addEnemy() {
 
   enemies = [];
   enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
   // enemies.push(enemy.clone());
   // enemies.push(enemy.clone());
   // enemies.push(enemy.clone());
@@ -488,8 +488,9 @@ function addEnemy() {
     el.userData.direction = new THREE.Vector3();
     el.userData.far = new THREE.Vector3();
     el.userData.angle = ['top', 'down', 'left', 'right'];
-    el.userData.turn = 'top';
+    el.userData.turn = el.userData.angle[randomIntFromInterval(0,3)]
     el.userData.idle = 'true';
+    el.userData.attack = 'false';
     
     el.userData.enemyBoxTop = enemyBoxTop.clone();
 
@@ -508,20 +509,20 @@ function addEnemy() {
 
 
   enemies[0].position.set(90, 0, 50);
-  // enemies[1].position.set(90, 0, 0);
-  // enemies[2].position.set(120, 0, 0);
-  // enemies[3].position.set(40, 0, 100);
-  // enemies[4].position.set(100, 0, 0);
-  // enemies[5].position.set(90, 0, 50);
-  // enemies[6].position.set(90, 0, 0);
-  // enemies[7].position.set(120, 0, 0);
-  // enemies[8].position.set(40, 0, 100);
-  // enemies[9].position.set(100, 0, 0);
-  // enemies[10].position.set(90, 0, 50);
-  // enemies[11].position.set(90, 0, 0);
-  // enemies[12].position.set(120, 0, 0);
-  // enemies[13].position.set(40, 0, 100);
-  // enemies[14].position.set(100, 0, 0);
+  enemies[1].position.set(90, 0, 0);
+  enemies[2].position.set(120, 0, 0);
+  enemies[3].position.set(40, 0, 100);
+  enemies[4].position.set(100, 0, 0);
+  enemies[5].position.set(90, 0, 50);
+  enemies[6].position.set(90, 0, 0);
+  enemies[7].position.set(120, 0, 0);
+  enemies[8].position.set(40, 0, 100);
+  enemies[9].position.set(100, 0, 0);
+  enemies[10].position.set(90, 0, 50);
+  enemies[11].position.set(90, 0, 0);
+  enemies[12].position.set(120, 0, 0);
+  enemies[13].position.set(40, 0, 100);
+  enemies[14].position.set(100, 0, 0);
   // enemies[15].position.set(90, 0, 50);
   // enemies[16].position.set(90, 0, 0);
   // enemies[17].position.set(120, 0, 0);
@@ -542,167 +543,141 @@ function addEnemy() {
 
 function fightEnemies() {
   enemies.forEach(element => {
-    element.userData.hearPlayer = true;
 
-    
+    element.userData.seePlayer = true;
+    element.userData.hearPlayer = false;
+    element.userData.idle = true;
+    /*///////////////////////////////////////////////////////////////////////*/
+    // element.userData.rayLine.geometry.setFromPoints(
+    //   [
+    //     element.position,
+    //     element.userData.raycaster.ray.origin
+    //   ]
+    // );
+    // element.userData.rayLine2.geometry.setFromPoints(
+    //   [
+    //     element.position,
+    //     element.userData.seeRaycaster.ray.origin
+    //   ]
+    // );
+    // element.userData.rayLine3.geometry.setFromPoints(
+    //   [
+    //     element.position,
+    //     element.userData.idleRaycaster.ray.origin
+    //   ]
+    // );
+
+   
+    /*///////////////////////////////////////////////////////////////////////*/
+
     if (element.position.distanceTo(player.position) < 80) {
       element.userData.hearPlayer = true;
-      element.userData.idle = false;
     }
     else {
       element.userData.hearPlayer = false;
-      //element.userData.idle = true;
-      
     }
 
 
-    if (element.userData.hearPlayer && element.userData.seePlayer && !element.userData.idle) {
-      element.userData.raycaster.set(player.position, element.userData.direction.subVectors(element.position, player.position).normalize());
-      element.userData.raycaster.far = new THREE.Vector3().subVectors(element.position, player.position).length();
+    /*///////////////////////////////////////////////////////////////////////*/
 
-      element.userData.seeRaycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
-      element.userData.seeRaycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.raycaster.ray.origin).length();
-    }
-    // else if (element.userData.hearPlayer && !element.userData.seePlayer && !element.userData.idle) {
-    //   element.userData.seeRaycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
-    //   element.userData.seeRaycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.seeRaycaster.ray.origin).length();
-    // }
-
-
-    if (!element.userData.idle) {
-      element.userData.rayLine.geometry.setFromPoints(
-        [
-          element.position,
-          element.userData.raycaster.ray.origin
-        ]
-      );
-      element.userData.rayLine2.geometry.setFromPoints(
-        [
-          element.position,
-          element.userData.seeRaycaster.ray.origin
-        ]
-      );
-    }
-    else {
-      element.userData.rayLine3.geometry.setFromPoints(
-        [
-          element.position,
-          element.userData.idleRaycaster.ray.origin
-        ]
-      );
-    }
-
-    
-
-
-    //element.userData.intersectWorld = false;
-    
-    console.log(element.userData.idle);
-    
-
-    //console.log(`${element.userData.seePlayer} ---- ${element.userData.hearPlayer}`);
-    if (element.userData.seeRaycaster.intersectObjects(city.children.filter((el)=>el.name.indexOf('building')>=0)).length>0) {
-      element.userData.seePlayer = false;
-      //console.log(element.userData.seeRaycaster.intersectObjects(city.children.filter((el)=>el.name.indexOf('building')>=0))[0].object.name);
-    }
-    else {element.userData.seePlayer = true}
-    
-    
-
-    if (element.userData.seePlayer && element.userData.hearPlayer && !element.userData.idle) {
-      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
-      element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
-    }
-    else if (!element.userData.seePlayer && element.userData.hearPlayer && !element.userData.idle){
-      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
-      element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
-    }
-    else if (!element.userData.hearPlayer && !element.userData.idle){
-      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
-      element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
-    }
-
-    
-
-    if (element.userData.idle) {
-      let timeIdleTurn = Math.random();
-      let idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z);
-      if (timeIdleTurn > 0.999) {
-        element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
-        
-      }
-      if (element.userData.turn == 'top') {
-        idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z + 50);
-      }
-      else if (element.userData.turn == 'down') {
-        idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z - 50);
-      }
-      else if (element.userData.turn == 'left') {
-        idleTurn = new THREE.Vector3(element.position.x+50, element.position.y, element.position.z);
-      }
-      else if (element.userData.turn == 'right') {
-        idleTurn = new THREE.Vector3(element.position.x-50, element.position.y, element.position.z);
-      }
-      
-      
-
-      element.userData.idleRaycaster.set(idleTurn, element.position.clone().normalize());
-      element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.idleRaycaster.ray.origin);
-
-
-
-      element.position.add(element.userData.idleRaycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/3));
-      
-      //console.log(element.userData.idle);
-    }
-
-    
-
-    
-    if (element.position.distanceTo(element.userData.raycaster.ray.origin) < 4 || !element.userData.seePlayer) {
-      element.userData.idle = true;
-      
-    }
-
-
-    
-    
     city.children.forEach(function(item, index, array) {
-      
+        
       if (item.name.indexOf('building') >= 0) {
-        
-
-        if (element.userData.raycaster.intersectObject(item).length > 0 && element.userData.seeRaycaster.intersectObject(item).length > 0) {
+        if (element.userData.seeRaycaster.intersectObject(item).length > 0) {
           element.userData.seePlayer = false;
-          
-        } 
-        
+        }
       }
-      
+      if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxLeft')[0], item)) {
+        element.position.x -= element.userData.speed;
+        element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
+        if (!element.userData.hearPlayer) {
+          element.userData.idle = true;
+          element.userData.attack = false;
+        }
+      };
+      if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxRight')[0], item)) {
+        element.position.x += element.userData.speed;
+        element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
+        if (!element.userData.hearPlayer) {
+          element.userData.idle = true;
+          element.userData.attack = false;
+        }
+      };
+      if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxTop')[0], item)) {
+        element.position.z -= element.userData.speed;
+        element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
+        if (!element.userData.hearPlayer) {
+          element.userData.idle = true;
+          element.userData.attack = false;
+        }
+      };
+      if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxBottom')[0], item)) {
+        element.position.z += element.userData.speed;
+        element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
+        if (!element.userData.hearPlayer) {
+          element.userData.idle = true;
+          element.userData.attack = false;
+        }
+      };
+    })
+    element.userData.seeRaycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
+    element.userData.seeRaycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.seeRaycaster.ray.origin).length();
 
+    /*///////////////////////////////////////////////////////////////////////*/
 
-        if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxLeft')[0], item)) {
-          element.position.x -= element.userData.speed;
-          element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
-        };
-        if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxRight')[0], item)) {
-          element.position.x += element.userData.speed;
-          element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
-        };
-        if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxTop')[0], item)) {
-          element.position.z -= element.userData.speed;
-          element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
-        };
-        if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxBottom')[0], item)) {
-          element.position.z += element.userData.speed;
-          element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
-        };
-
-    });
+    if (element.userData.hearPlayer && element.userData.seePlayer) {
+      element.userData.idle = false;
+      element.userData.attack = true;
+    }
     
 
+    if (element.userData.attack && !element.userData.idle) {
+      element.userData.raycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
+      element.userData.raycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.raycaster.ray.origin).length();
 
-    //console.log(element.children.filter(el => el.name == 'enemyBody'));
+      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
+      element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
+    }
+    else if (element.userData.attack && element.userData.idle) {
+      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
+      element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
+    }
+
+    if (element.position.distanceTo(element.userData.raycaster.ray.origin) < 2) {
+      element.userData.attack = false;
+    }
+
+    /*///////////////////////////////////////////////////////////////////////*/
+    
+    
+    
+      if (element.userData.idle && !element.userData.attack) {
+        let timeIdleTurn = Math.random();
+        let idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z);
+        if (timeIdleTurn > 0.998) {
+          element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
+        }
+        if (element.userData.turn == 'top') {
+          idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z + 50);
+        }
+        else if (element.userData.turn == 'down') {
+          idleTurn = new THREE.Vector3(element.position.x, element.position.y, element.position.z - 50);
+        }
+        else if (element.userData.turn == 'left') {
+          idleTurn = new THREE.Vector3(element.position.x+50, element.position.y, element.position.z);
+        }
+        else if (element.userData.turn == 'right') {
+          idleTurn = new THREE.Vector3(element.position.x-50, element.position.y, element.position.z);
+        }
+        
+        element.userData.idleRaycaster.set(idleTurn, element.position.clone().normalize());
+        element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.idleRaycaster.ray.origin);
+
+        element.position.add(element.userData.idleRaycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/3));
+      }
+
+
+
     
   });
 
