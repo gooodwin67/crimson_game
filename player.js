@@ -1,5 +1,5 @@
 import { detectCollisionCubes } from './detectColisions.js';
-export const movePlayer = (player, playerBox ,camera, city) => {
+export const movePlayer = (THREE, scene, player, playerBox, playerFront, playerFrontBullet, bullets, bullet, camera, city) => {
     
 	let moveDistance = 0.8; 
   
@@ -194,6 +194,48 @@ export const movePlayer = (player, playerBox ,camera, city) => {
 
     camera.position.x = player.position.x;
     camera.position.z = player.position.z-3;
+
+    /*///////////////////////////////////////////////////////////////////////////////////////*/
+
+    
+    
+
+    if (player.userData.shoot) {
+        console.log('shoot')
+        
+        let bulletClone = bullet.clone();
+        
+        bulletClone.position.set(player.position.x, 2, player.position.z)
+        bulletClone.userData.vec = new THREE.Vector3();
+        bulletClone.userData.vec.setFromMatrixPosition(playerFrontBullet.matrixWorld);
+        bulletClone.userData.vec = new THREE.Vector3(bulletClone.userData.vec.x, bulletClone.userData.vec.y, bulletClone.userData.vec.z);
+
+        scene.add( bulletClone );
+        bullets.push(bulletClone);
+
+
+        
+        
+
+        
+        //console.log(bullets);
+
+
+        player.userData.shoot = false;
+
+        
+    }
+
+    if (bullets.length>0) {
+        bullets.forEach((item, index) => {
+            item.position.add(item.userData.vec.clone().sub(item.position).normalize().multiplyScalar(5));
+            if (item.position.distanceTo(item.userData.vec)<5) {
+                scene.remove(item);
+                bullets.splice(index, 1);
+            }
+        })
+        
+    }
 
 
     
