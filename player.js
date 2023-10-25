@@ -233,6 +233,15 @@ export const movePlayer = (THREE, scene, player, playerBox, playerFront, playerF
                 scene.remove(item);
                 bullets.splice(index, 1);
             }
+            city.children.filter(el => el.name.indexOf('building') >= 0).forEach((itemB)=>{
+                if (detectCollisionCubes(itemB, item)) {
+                    scene.remove(item);
+                    bullets.splice(index, 1);
+                };    
+            })
+            
+
+            
         })
         
     }

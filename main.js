@@ -50,8 +50,8 @@ let scene = new THREE.Scene();
 let renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
 renderer.setClearColor(0xffffff)
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+//renderer.shadowMap.enabled = true;
+//renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.gammaInput = true;
 document.body.appendChild(renderer.domElement);
 window.addEventListener("resize", (event) => {
@@ -66,12 +66,20 @@ let camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 10000)
 camera.position.set(0, 150, 0);
 //camera.lookAt(0,0,0);
 
-var ambient = new THREE.AmbientLight( 0xffffff );
+var ambient = new THREE.AmbientLight( 0xffffff, 0.9 );
 scene.add( ambient )
-light = new THREE.PointLight( 0xffffff, 0.7, 700);
-light.position.set(50,50, 100);
-//light.castShadow = true;
+
+light = new THREE.SpotLight( 0xffffff, 1 );
+light.position.set(50,20, 0);
+light.penumbra = 1;
+light.power = 2;
+light.decay = 2;
+light.distance = 100;
+
+
 scene.add( light );
+
+
 
 //let controls = new OrbitControls(camera, renderer.domElement);
 //controls.enableDamping = true;
@@ -89,7 +97,7 @@ function init() {
     var geometryPlane = new THREE.BoxGeometry(3000, 1, 3000);
     var materialPlane = new THREE.MeshPhongMaterial({ color: 0xcccccc, side: THREE.DoubleSide })
     plane = new THREE.Mesh ( geometryPlane, materialPlane );
-    plane.receiveShadow = true;
+    //plane.receiveShadow = true;
     scene.add( plane );
 
     const size = 1000;
@@ -121,7 +129,8 @@ function animate() {
 
     if (gameLoaded) {
       movePlayer(THREE, scene, player, playerBox, playerFront, playerFrontBullet, bullets, bullet, camera, city);
-      light.position.set(player.position.x, 100, player.position.z);
+      light.position.set(player.position.x, 20, player.position.z);
+      light.target = player;
       camera.lookAt(player.position);
       
       //console.log(player.userData.shoot);
@@ -272,10 +281,10 @@ function addPlayer() {
   playerFront = new THREE.Mesh( geometryPlayerFront, materialPlayerFront);
   playerFront.position.set(0,2,1);
 
-  const geometryPlayerFrontBullet = new THREE.BoxGeometry(0.01,0.1,0.1)
+  const geometryPlayerFrontBullet = new THREE.BoxGeometry(0.1,0.1,0.1)
   const materialPlayerFrontBullet = new THREE.MeshBasicMaterial( { color: 0xff0000, transparent: true, opacity: 1 } );
   playerFrontBullet = new THREE.Mesh( geometryPlayerFrontBullet, materialPlayerFrontBullet);
-  playerFrontBullet.position.set(0,2,15);
+  playerFrontBullet.position.set(0,1,15);
 
   
 
@@ -411,7 +420,7 @@ function addPlayer() {
 
 
 function addEnemy() {
-  const geometryEnemy = new THREE.BoxGeometry(10,10,10)
+  const geometryEnemy = new THREE.BoxGeometry(10,60,10)
   const materiaEnemy = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
   let enemyBody = new THREE.Mesh( geometryEnemy, materiaEnemy);
   enemyBody.name = 'enemyBody';
@@ -469,35 +478,35 @@ function addEnemy() {
 
   enemies = [];
   enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
-  // enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
+  enemies.push(enemy.clone());
 
   enemies.forEach((el)=>{
     el.userData.speed = Math.random();
@@ -536,42 +545,43 @@ function addEnemy() {
   });
 
 
-  enemies[0].position.set(90, 0, 50);
-  // enemies[1].position.set(90, 0, 0);
-  // enemies[2].position.set(120, 0, 0);
-  // enemies[3].position.set(40, 0, 100);
-  // enemies[4].position.set(100, 0, 0);
-  // enemies[5].position.set(90, 0, 50);
-  // enemies[6].position.set(90, 0, 0);
-  // enemies[7].position.set(120, 0, 0);
-  // enemies[8].position.set(40, 0, 100);
-  // enemies[9].position.set(100, 0, 0);
-  // enemies[10].position.set(90, 0, 50);
-  // enemies[11].position.set(90, 0, 0);
-  // enemies[12].position.set(120, 0, 0);
-  // enemies[13].position.set(40, 0, 100);
-  // enemies[14].position.set(100, 0, 0);
-  // enemies[15].position.set(90, 0, 50);
-  // enemies[16].position.set(90, 0, 0);
-  // enemies[17].position.set(120, 0, 0);
-  // enemies[18].position.set(40, 0, 100);
-  // enemies[19].position.set(100, 0, 0);
-  // enemies[0].position.set(90, 0, 50);
-  // enemies[21].position.set(90, 0, 0);
-  // enemies[22].position.set(120, 0, 0);
-  // enemies[23].position.set(40, 0, 100);
-  // enemies[24].position.set(100, 0, 0);
-  // enemies[25].position.set(90, 0, 50);
-  // enemies[26].position.set(90, 0, 0);
-  // enemies[27].position.set(120, 0, 0);
-  // enemies[28].position.set(40, 0, 100);
-  // enemies[29].position.set(100, 0, 0);
+  enemies[0].position.set(90, 0, 0);
+  enemies[1].position.set(90, 0, 0);
+  enemies[2].position.set(90, 0, 0);
+  enemies[3].position.set(90, 0, 0);
+  enemies[4].position.set(90, 0, 0);
+  enemies[5].position.set(90, 0, 0);
+  enemies[6].position.set(90, 0, 0);
+  enemies[7].position.set(90, 0, 0);
+  enemies[8].position.set(90, 0, 0);
+  enemies[9].position.set(90, 0, 0);
+  enemies[10].position.set(90, 0, 0);
+  enemies[11].position.set(90, 0, 0);
+  enemies[12].position.set(90, 0, 0);
+  enemies[13].position.set(90, 0, 0);
+  enemies[14].position.set(90, 0, 0);
+  enemies[15].position.set(90, 0, 0);
+  enemies[16].position.set(90, 0, 0);
+  enemies[17].position.set(90, 0, 0);
+  enemies[18].position.set(90, 0, 0);
+  enemies[19].position.set(90, 0, 0);
+  enemies[20].position.set(90, 0, 0);
+  enemies[21].position.set(90, 0, 0);
+  enemies[22].position.set(90, 0, 0);
+  enemies[23].position.set(90, 0, 0);
+  enemies[24].position.set(90, 0, 0);
+  enemies[25].position.set(90, 0, 0);
+  enemies[26].position.set(90, 0, 0);
+  enemies[27].position.set(90, 0, 0);
+  enemies[28].position.set(90, 0, 0);
+  enemies[29].position.set(90, 0, 0);
+  
 
 }
 
 function fightEnemies() {
-  enemies.forEach(element => {
-
+  enemies.forEach((element, indexEn) => {
+    
     element.userData.seePlayer = true;
     element.userData.hearPlayer = false;
     element.userData.idle = true;
@@ -608,14 +618,14 @@ function fightEnemies() {
 
     /*///////////////////////////////////////////////////////////////////////*/
 
-    city.children.forEach(function(item, index, array) {
+    city.children.filter((el=>el.name.indexOf('buildingCube')>=0)).forEach(function(item, index, array) {
         
-      if (item.name.indexOf('building') >= 0) {
+      
         if (element.userData.seeRaycaster.intersectObject(item).length > 0) {
           element.userData.seePlayer = false;
         }
-      }
-      if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxLeft')[0], item)) {
+      
+      if (detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxLeft')[0], item)) {
         element.position.x -= element.userData.speed;
         element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
         if (!element.userData.hearPlayer) {
@@ -623,7 +633,7 @@ function fightEnemies() {
           element.userData.attack = false;
         }
       };
-      if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxRight')[0], item)) {
+      if (detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxRight')[0], item)) {
         element.position.x += element.userData.speed;
         element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
         if (!element.userData.hearPlayer) {
@@ -631,7 +641,7 @@ function fightEnemies() {
           element.userData.attack = false;
         }
       };
-      if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxTop')[0], item)) {
+      if (detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxTop')[0], item)) {
         element.position.z -= element.userData.speed;
         element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
         if (!element.userData.hearPlayer) {
@@ -639,7 +649,7 @@ function fightEnemies() {
           element.userData.attack = false;
         }
       };
-      if (item.name.indexOf('building') >= 0 && detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxBottom')[0], item)) {
+      if (detectCollisionCubes(element.children.filter(el => el.name == 'enemyBox')[0].children.filter(el => el.name == 'enemyBoxBottom')[0], item)) {
         element.position.z += element.userData.speed;
         element.userData.turn = element.userData.angle[randomIntFromInterval(0,3)];
         if (!element.userData.hearPlayer) {
@@ -663,7 +673,7 @@ function fightEnemies() {
       element.userData.raycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
       element.userData.raycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.raycaster.ray.origin).length();
 
-      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
+      element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed));
       element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
     }
     else if (element.userData.attack && element.userData.idle) {
@@ -705,7 +715,16 @@ function fightEnemies() {
       }
       
 
-
+      if (bullets.length>0) {
+        bullets.forEach((itemB, indexB) => {
+          if (detectCollisionCubes(itemB, element.children.filter(el => el.name == 'enemyBody')[0])) {
+            scene.remove(itemB);
+            scene.remove(element);
+            bullets.splice(indexB, 1);
+            enemies.splice(indexEn, 1);
+        }; 
+        })
+      }
 
     
   });
