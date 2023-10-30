@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import Stats from 'three/addons/libs/stats.module.js';
 import { movePlayer } from './player.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { detectCollisionCubes } from './detectColisions.js';
 
 import { OrbitControls } from "three/addons/controls/OrbitControls";
@@ -35,6 +36,7 @@ let playerBox = new THREE.Group();
 let clock2 = new THREE.Clock();
 
 let enemy;
+let enemyAll;
 let enemyBox = new THREE.Group();
 let enemies;
 
@@ -63,7 +65,7 @@ stats = new Stats();
 document.body.appendChild( stats.dom );
 
 let camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 10000);
-camera.position.set(0, 150, 0);
+camera.position.set(0, 100, 0);
 //camera.lookAt(0,0,0);
 
 var ambient = new THREE.AmbientLight( 0xffffff, 0.9 );
@@ -421,6 +423,7 @@ function addPlayer() {
 
 function addEnemy() {
   const geometryEnemy = new THREE.BoxGeometry(10,60,10)
+  //const geometryEnemy = new THREE.BoxGeometry(0,0,0)
   const materiaEnemy = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
   let enemyBody = new THREE.Mesh( geometryEnemy, materiaEnemy);
   enemyBody.name = 'enemyBody';
@@ -464,11 +467,8 @@ function addEnemy() {
 
 
 
-  
 
 
-
-  
 
   enemy = new THREE.Group();
   enemy.add( enemyBody );
@@ -476,7 +476,54 @@ function addEnemy() {
   enemy.add( enemyBox );
   enemyFront.position.set(0,0,10);
 
-  enemies = [];
+
+
+  var loader = new GLTFLoader();
+
+  loader.load(
+    'models/enemies/zombie.gltf',
+    function ( gltf ) {
+      
+      gltf.scene.scale.set(10,10,10);
+      
+      gltf.animations; // Array<THREE.AnimationClip>
+      gltf.scene; // THREE.Scene
+      gltf.scenes; // Array<THREE.Scene>
+      gltf.cameras; // Array<THREE.Camera>
+      gltf.asset; // Object
+
+      gltf.scene.animations = gltf.animations;
+      enemyAll = gltf.scene;
+      enemyAll.name = 'enemyAll';
+      
+
+      //enemyAll.rotation.y = Math.PI*2;
+
+      
+      // playerAll.traverse( function ( child ) {
+      //   if ( child.isMesh ) {
+      //     child.castShadow = true;
+      //   }
+      // } );
+      //enemyAll.mixer = new THREE.AnimationMixer( enemyAll );
+
+      // playerMixers.push( playerAll.mixer );
+
+      // allAnimations.push(player.userData.animations.actionStay = playerAll.mixer.clipAction( playerAll.animations.find(el=>el.name==='idle')));
+      // //actionStay.timeScale = 0.5;
+      // allAnimations.push(player.userData.animations.actionRunForward = playerAll.mixer.clipAction( playerAll.animations.find(el=>el.name==='run_forward')));
+
+      // allAnimations.push(player.userData.animations.actionRunRight = playerAll.mixer.clipAction( playerAll.animations.find(el=>el.name==='run_right')));
+
+      // player.userData.animations.actionStay.play();
+
+      
+      
+      //enemy.add(SkeletonUtils.clone(enemyAll));
+
+
+
+      enemies = [];
   enemies.push(enemy.clone());
   enemies.push(enemy.clone());
   enemies.push(enemy.clone());
@@ -528,11 +575,14 @@ function addEnemy() {
     el.userData.turn = el.userData.angle[randomIntFromInterval(0,3)]
     el.userData.idle = 'true';
     el.userData.attack = 'false';
+
+    el.add(SkeletonUtils.clone(enemyAll));
     
     el.userData.enemyBoxTop = enemyBoxTop.clone();
 
     el.userData.seePlayer = false;
     el.userData.hearPlayer = false;
+    //el.add(enemyAll.clone());
 
     el.add(enemy.userData.enemyBoxTop);
 
@@ -575,6 +625,50 @@ function addEnemy() {
   enemies[27].position.set(90, 0, 0);
   enemies[28].position.set(90, 0, 0);
   enemies[29].position.set(90, 0, 0);
+
+
+
+
+      //console.log(player.children.filter(el => el.name == 'playerBox')[0].children.filter(el => el.name == 'playerBoxLeft')[0]);
+
+
+      //playerLoaded = true;
+    
+    },
+    // called while loading is progressing
+    function ( xhr ) {
+      console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    },
+    // called when loading has errors
+    function ( error ) {
+      console.log( 'An error happened' );
+    }
+
+
+  );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+
+  
+
+  
   
 
 }
@@ -618,7 +712,7 @@ function fightEnemies() {
 
     /*///////////////////////////////////////////////////////////////////////*/
 
-    city.children.filter((el=>el.name.indexOf('buildingCube')>=0)).forEach(function(item, index, array) {
+    city.children.filter((el=>el.name.indexOf('building')>=0)).forEach(function(item, index, array) {
         
       
         if (element.userData.seeRaycaster.intersectObject(item).length > 0) {
