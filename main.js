@@ -38,6 +38,8 @@ let clock2 = new THREE.Clock();
 let enemy;
 let enemyAll;
 let enemyBox = new THREE.Group();
+let enemyMixers = [];
+let allEnemyAnimations = [];
 let enemies;
 
 const raycasterEnemy = new THREE.Raycaster();
@@ -79,7 +81,7 @@ light.decay = 2;
 light.distance = 100;
 
 
-scene.add( light );
+//scene.add( light );
 
 
 
@@ -149,7 +151,8 @@ function animate() {
       for ( var i = 0; i < playerMixers.length; i ++ ) {
         playerMixers[ i ].update( clock2.getDelta() );
       }
-    }  
+    } 
+    
 };
 
 /*///////////////////////////////////////////////////////////////////*/
@@ -243,7 +246,7 @@ function addWorld() {
 
       city = gltf.scene;
       scene.add(city);
-      console.log(city);
+      //console.log(city);
       
       
      
@@ -401,6 +404,7 @@ function addPlayer() {
 
 
       playerLoaded = true;
+      console.log(player);
     
     },
     // called while loading is progressing
@@ -424,7 +428,7 @@ function addPlayer() {
 function addEnemy() {
   const geometryEnemy = new THREE.BoxGeometry(10,60,10)
   //const geometryEnemy = new THREE.BoxGeometry(0,0,0)
-  const materiaEnemy = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
+  const materiaEnemy = new THREE.MeshLambertMaterial({color: 0xff0000, transparent: true, opacity: 0.1});
   let enemyBody = new THREE.Mesh( geometryEnemy, materiaEnemy);
   enemyBody.name = 'enemyBody';
 
@@ -436,7 +440,7 @@ function addEnemy() {
   
   enemyBox.name = 'enemyBox';
   const geometryenemyBoxLeft = new THREE.BoxGeometry(2,25,2);
-  const materialenemyBoxLeft = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+  const materialenemyBoxLeft = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0.1});
   const enemyBoxLeft = new THREE.Mesh( geometryenemyBoxLeft, materialenemyBoxLeft);
   enemyBoxLeft.name = 'enemyBoxLeft';
   enemyBoxLeft.position.set(4,0,0);
@@ -444,7 +448,7 @@ function addEnemy() {
   enemyBox.add( enemyBoxLeft );
 
   const geometryenemyBoxRight = new THREE.BoxGeometry(2,25,2);
-  const materialenemyBoxRight = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+  const materialenemyBoxRight = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0.1});
   const enemyBoxRight = new THREE.Mesh( geometryenemyBoxRight, materialenemyBoxRight);
   enemyBoxRight.name = 'enemyBoxRight';
   enemyBoxRight.position.set(-4,0,0);
@@ -452,14 +456,14 @@ function addEnemy() {
   enemyBox.add( enemyBoxRight );
 
   const geometryenemyBoxTop = new THREE.BoxGeometry(2,25,2);
-  const materialenemyBoxTop = new THREE.MeshPhongMaterial( { color: 0x000000 } );
+  const materialenemyBoxTop = new THREE.MeshLambertMaterial({color: 0x000000, transparent: true, opacity: 0.1});
   const enemyBoxTop = new THREE.Mesh( geometryenemyBoxTop, materialenemyBoxTop);
   enemyBoxTop.name = 'enemyBoxTop';
   enemyBoxTop.position.set(0,0,4);
   enemyBox.add( enemyBoxTop );
 
   const geometryenemyBoxBottom = new THREE.BoxGeometry(2,25,2);
-  const materialenemyBoxBottom = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+  const materialenemyBoxBottom = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0.1});
   const enemyBoxBottom = new THREE.Mesh( geometryenemyBoxBottom, materialenemyBoxBottom);
   enemyBoxBottom.name = 'enemyBoxBottom';
   enemyBoxBottom.position.set(0,0,-4);
@@ -475,6 +479,10 @@ function addEnemy() {
   enemy.add( enemyFront );
   enemy.add( enemyBox );
   enemyFront.position.set(0,0,10);
+
+  enemy.animations = {
+    actionWalk: null,
+  }
 
 
 
@@ -497,134 +505,73 @@ function addEnemy() {
       enemyAll.name = 'enemyAll';
       
 
-      //enemyAll.rotation.y = Math.PI*2;
-
       
-      // playerAll.traverse( function ( child ) {
+      // enemyAll.traverse( function ( child ) {
       //   if ( child.isMesh ) {
       //     child.castShadow = true;
       //   }
       // } );
-      //enemyAll.mixer = new THREE.AnimationMixer( enemyAll );
 
-      // playerMixers.push( playerAll.mixer );
-
-      // allAnimations.push(player.userData.animations.actionStay = playerAll.mixer.clipAction( playerAll.animations.find(el=>el.name==='idle')));
-      // //actionStay.timeScale = 0.5;
-      // allAnimations.push(player.userData.animations.actionRunForward = playerAll.mixer.clipAction( playerAll.animations.find(el=>el.name==='run_forward')));
-
-      // allAnimations.push(player.userData.animations.actionRunRight = playerAll.mixer.clipAction( playerAll.animations.find(el=>el.name==='run_right')));
-
-      // player.userData.animations.actionStay.play();
+      
 
       
       
-      //enemy.add(SkeletonUtils.clone(enemyAll));
+      
+      
 
 
 
       enemies = [];
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-  enemies.push(enemy.clone());
-
-  enemies.forEach((el)=>{
-    el.userData.speed = Math.random();
-    el.userData.raycaster = new THREE.Raycaster();
-    el.userData.seeRaycaster = new THREE.Raycaster();
-    el.userData.idleRaycaster = new THREE.Raycaster();
-    el.userData.rayLine = new THREE.Line( new THREE.BufferGeometry(), materialLine);
-    el.userData.rayLine2 = new THREE.Line( new THREE.BufferGeometry(), materialLine2);
-    el.userData.rayLine3 = new THREE.Line( new THREE.BufferGeometry(), materialLine3);
-    el.userData.rayLine.frustumCulled = false;
-    el.userData.rayLine.position.set(0,5,0);
-    el.userData.rayLine2.frustumCulled = false;
-    el.userData.rayLine2.position.set(0,5,0);
-    el.userData.rayLine3.frustumCulled = false;
-    el.userData.rayLine3.position.set(0,5,0);
-    el.userData.direction = new THREE.Vector3();
-    el.userData.far = new THREE.Vector3();
-    el.userData.angle = ['top', 'down', 'left', 'right'];
-    el.userData.turn = el.userData.angle[randomIntFromInterval(0,3)]
-    el.userData.idle = 'true';
-    el.userData.attack = 'false';
-
-    el.add(SkeletonUtils.clone(enemyAll));
-    
-    el.userData.enemyBoxTop = enemyBoxTop.clone();
-
-    el.userData.seePlayer = false;
-    el.userData.hearPlayer = false;
-    //el.add(enemyAll.clone());
-
-    el.add(enemy.userData.enemyBoxTop);
-
-    el.userData.intersectWorld = false;
-
-    scene.add( el );
-    scene.add( el.userData.rayLine );
-    scene.add( el.userData.rayLine2 );
-    scene.add( el.userData.rayLine3 );
-  });
+      enemies.push(enemy.clone());
+//      enemies.push(enemy.clone());
 
 
-  enemies[0].position.set(90, 0, 0);
-  enemies[1].position.set(90, 0, 0);
-  enemies[2].position.set(90, 0, 0);
-  enemies[3].position.set(90, 0, 0);
-  enemies[4].position.set(90, 0, 0);
-  enemies[5].position.set(90, 0, 0);
-  enemies[6].position.set(90, 0, 0);
-  enemies[7].position.set(90, 0, 0);
-  enemies[8].position.set(90, 0, 0);
-  enemies[9].position.set(90, 0, 0);
-  enemies[10].position.set(90, 0, 0);
-  enemies[11].position.set(90, 0, 0);
-  enemies[12].position.set(90, 0, 0);
-  enemies[13].position.set(90, 0, 0);
-  enemies[14].position.set(90, 0, 0);
-  enemies[15].position.set(90, 0, 0);
-  enemies[16].position.set(90, 0, 0);
-  enemies[17].position.set(90, 0, 0);
-  enemies[18].position.set(90, 0, 0);
-  enemies[19].position.set(90, 0, 0);
-  enemies[20].position.set(90, 0, 0);
-  enemies[21].position.set(90, 0, 0);
-  enemies[22].position.set(90, 0, 0);
-  enemies[23].position.set(90, 0, 0);
-  enemies[24].position.set(90, 0, 0);
-  enemies[25].position.set(90, 0, 0);
-  enemies[26].position.set(90, 0, 0);
-  enemies[27].position.set(90, 0, 0);
-  enemies[28].position.set(90, 0, 0);
-  enemies[29].position.set(90, 0, 0);
+      enemies.forEach((el)=>{
+        el.userData.speed = Math.random();
+        el.userData.raycaster = new THREE.Raycaster();
+        el.userData.seeRaycaster = new THREE.Raycaster();
+        el.userData.idleRaycaster = new THREE.Raycaster();
+        el.userData.rayLine = new THREE.Line( new THREE.BufferGeometry(), materialLine);
+        el.userData.rayLine2 = new THREE.Line( new THREE.BufferGeometry(), materialLine2);
+        el.userData.rayLine3 = new THREE.Line( new THREE.BufferGeometry(), materialLine3);
+        el.userData.rayLine.frustumCulled = false;
+        el.userData.rayLine.position.set(0,5,0);
+        el.userData.rayLine2.frustumCulled = false;
+        el.userData.rayLine2.position.set(0,5,0);
+        el.userData.rayLine3.frustumCulled = false;
+        el.userData.rayLine3.position.set(0,5,0);
+        el.userData.direction = new THREE.Vector3();
+        el.userData.far = new THREE.Vector3();
+        el.userData.angle = ['top', 'down', 'left', 'right'];
+        el.userData.turn = el.userData.angle[randomIntFromInterval(0,3)]
+        el.userData.idle = 'true';
+        el.userData.attack = 'false';
+
+        el.add(SkeletonUtils.clone(enemyAll));
+        
+        el.userData.enemyBoxTop = enemyBoxTop.clone();
+
+        el.userData.seePlayer = false;
+        el.userData.hearPlayer = false;
+        //el.add(enemyAll.clone());
+
+        el.add(enemy.userData.enemyBoxTop);
+
+        el.userData.intersectWorld = false;
+
+        scene.add( el );
+        scene.add( el.userData.rayLine );
+        scene.add( el.userData.rayLine2 );
+        scene.add( el.userData.rayLine3 );
+      });
+
+
+      enemies[0].position.set(90, 0, 0);
+      //enemies[1].position.set(90, 0, 0);
+
+      console.log(enemies);
+      
+
 
 
 
@@ -669,12 +616,18 @@ function addEnemy() {
   
 
   
-  
 
 }
 
 function fightEnemies() {
+  
   enemies.forEach((element, indexEn) => {
+
+    // if ( enemyMixers.length > 0 ) {
+    //   for ( var i = 0; i < enemyMixers.length; i ++ ) {
+    //     enemyMixers[ i ].update( clock2.getDelta() );
+    //   }
+    // }  
     
     element.userData.seePlayer = true;
     element.userData.hearPlayer = false;
