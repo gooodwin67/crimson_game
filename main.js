@@ -41,6 +41,7 @@ let enemyBox = new THREE.Group();
 let enemyMixers = [];
 let allEnemyAnimations = [];
 let enemies;
+let clock3 = new THREE.Clock();
 
 const raycasterEnemy = new THREE.Raycaster();
 let lineEnemy;
@@ -142,16 +143,28 @@ function animate() {
 
       
       fightEnemies();
-    }
+    
 
     
 
     		
-    if ( playerMixers.length > 0 ) {
-      for ( var i = 0; i < playerMixers.length; i ++ ) {
-        playerMixers[ i ].update( clock2.getDelta() );
+      if ( playerMixers.length > 0 ) {
+        for ( var i = 0; i < playerMixers.length; i ++ ) {
+          playerMixers[ i ].update( clock2.getDelta() );
+        }
+      } 
+
+       
+      for (var i = 0; i< enemies.length; i++) {
+        if ( enemies[i].userData.enemyMixers.length > 0 ) {
+          for ( var j = 0; j < enemies[i].userData.enemyMixers.length; j ++ ) {
+            enemies[i].userData.enemyMixers[ j ].update( enemies[i].userData.clock.getDelta() );
+          }
+        }
+        
+        
       }
-    } 
+    }
     
 };
 
@@ -404,7 +417,7 @@ function addPlayer() {
 
 
       playerLoaded = true;
-      console.log(player);
+      //console.log(player);
     
     },
     // called while loading is progressing
@@ -489,7 +502,7 @@ function addEnemy() {
   var loader = new GLTFLoader();
 
   loader.load(
-    'models/enemies/zombie.gltf',
+    'models/enemies/zombie2.gltf',
     function ( gltf ) {
       
       gltf.scene.scale.set(10,10,10);
@@ -523,7 +536,15 @@ function addEnemy() {
 
       enemies = [];
       enemies.push(enemy.clone());
-//      enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
 
 
       enemies.forEach((el)=>{
@@ -559,6 +580,32 @@ function addEnemy() {
 
         el.userData.intersectWorld = false;
 
+        
+
+
+
+
+
+        el.children.find(el=>el.name === 'enemyAll').children[0].animations = enemyAll.animations;
+
+        var zomb = el.children.find(el=>el.name === 'enemyAll').children[0];
+
+        el.userData.clock = new THREE.Clock();
+
+        el.userData.mixer = new THREE.AnimationMixer( zomb );
+
+        el.userData.enemyMixers = [];
+        el.userData.enemyMixers.push(el.userData.mixer);
+
+        el.userData.clips = zomb.animations;
+
+        el.userData.clip = THREE.AnimationClip.findByName( el.userData.clips, 'walk' );
+        el.userData.action = el.userData.mixer.clipAction( el.userData.clip );
+        
+        el.userData.action.play();
+
+
+
         scene.add( el );
         scene.add( el.userData.rayLine );
         scene.add( el.userData.rayLine2 );
@@ -567,9 +614,17 @@ function addEnemy() {
 
 
       enemies[0].position.set(90, 0, 0);
-      //enemies[1].position.set(90, 0, 0);
+      // enemies[1].position.set(90, 0, 0);
+      // enemies[2].position.set(90, 0, 0);
+      // enemies[3].position.set(90, 0, 0);
+      // enemies[4].position.set(90, 0, 0);
+      // enemies[5].position.set(90, 0, 0);
+      // enemies[6].position.set(90, 0, 0);
+      // enemies[7].position.set(90, 0, 0);
+      // enemies[8].position.set(90, 0, 0);
+      // enemies[9].position.set(90, 0, 0);
 
-      console.log(enemies);
+      
       
 
 
