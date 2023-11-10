@@ -42,6 +42,7 @@ let enemyMixers = [];
 let allEnemyAnimations = [];
 let enemies;
 let clock3 = new THREE.Clock();
+let enemySpeeds = [0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20, 0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.30];
 
 const raycasterEnemy = new THREE.Raycaster();
 let lineEnemy;
@@ -67,8 +68,8 @@ window.addEventListener("resize", (event) => {
 stats = new Stats();
 document.body.appendChild( stats.dom );
 
-let camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 1, 10000);
-camera.position.set(0, 100, 0);
+let camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 1, 1000);
+camera.position.set(0, 120, 0);
 //camera.lookAt(0,0,0);
 
 var ambient = new THREE.AmbientLight( 0xffffff, 0.9 );
@@ -245,7 +246,8 @@ function addWorld() {
   var loader = new GLTFLoader();
 
   loader.load(
-    'models/world/world3.gltf',
+    //'models/world/world3.gltf',
+    'models/world/world3_small.gltf',
     function ( gltf ) {
       
       //gltf.scene.scale.set(100,100,100);
@@ -439,47 +441,47 @@ function addPlayer() {
 
 
 function addEnemy() {
-  const geometryEnemy = new THREE.BoxGeometry(10,60,10)
-  //const geometryEnemy = new THREE.BoxGeometry(0,0,0)
-  const materiaEnemy = new THREE.MeshLambertMaterial({color: 0xff0000, transparent: true, opacity: 0.1});
+  
+  const geometryEnemy = new THREE.BoxGeometry(5,60,5)
+  const materiaEnemy = new THREE.MeshLambertMaterial({color: 0xff0000, transparent: true, opacity: 0});
   let enemyBody = new THREE.Mesh( geometryEnemy, materiaEnemy);
   enemyBody.name = 'enemyBody';
 
   const geometryEnemyFront = new THREE.BoxGeometry(2,10,2)
-  const materiaEnemyFront = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
+  const materiaEnemyFront = new THREE.MeshLambertMaterial({color: 0x00ff00, transparent: true, opacity: 0});
   let enemyFront= new THREE.Mesh( geometryEnemyFront, materiaEnemyFront);
 
 
   
   enemyBox.name = 'enemyBox';
   const geometryenemyBoxLeft = new THREE.BoxGeometry(2,25,2);
-  const materialenemyBoxLeft = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0.1});
+  const materialenemyBoxLeft = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0});
   const enemyBoxLeft = new THREE.Mesh( geometryenemyBoxLeft, materialenemyBoxLeft);
   enemyBoxLeft.name = 'enemyBoxLeft';
-  enemyBoxLeft.position.set(4,0,0);
+  enemyBoxLeft.position.set(1,0,0);
   enemyBoxLeft.rotation.y = Math.PI/2;
   enemyBox.add( enemyBoxLeft );
 
   const geometryenemyBoxRight = new THREE.BoxGeometry(2,25,2);
-  const materialenemyBoxRight = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0.1});
+  const materialenemyBoxRight = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0});
   const enemyBoxRight = new THREE.Mesh( geometryenemyBoxRight, materialenemyBoxRight);
   enemyBoxRight.name = 'enemyBoxRight';
-  enemyBoxRight.position.set(-4,0,0);
+  enemyBoxRight.position.set(-1,0,0);
   enemyBoxRight.rotation.y = Math.PI/2;
   enemyBox.add( enemyBoxRight );
 
   const geometryenemyBoxTop = new THREE.BoxGeometry(2,25,2);
-  const materialenemyBoxTop = new THREE.MeshLambertMaterial({color: 0x000000, transparent: true, opacity: 0.1});
+  const materialenemyBoxTop = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0});
   const enemyBoxTop = new THREE.Mesh( geometryenemyBoxTop, materialenemyBoxTop);
   enemyBoxTop.name = 'enemyBoxTop';
-  enemyBoxTop.position.set(0,0,4);
+  enemyBoxTop.position.set(0,0,1);
   enemyBox.add( enemyBoxTop );
 
   const geometryenemyBoxBottom = new THREE.BoxGeometry(2,25,2);
-  const materialenemyBoxBottom = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0.1});
+  const materialenemyBoxBottom = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0});
   const enemyBoxBottom = new THREE.Mesh( geometryenemyBoxBottom, materialenemyBoxBottom);
   enemyBoxBottom.name = 'enemyBoxBottom';
-  enemyBoxBottom.position.set(0,0,-4);
+  enemyBoxBottom.position.set(0,0,-1);
   enemyBox.add( enemyBoxBottom );
 
 
@@ -488,9 +490,12 @@ function addEnemy() {
 
 
   enemy = new THREE.Group();
-  enemy.add( enemyBody );
+  var enemyObj = new THREE.Group();
+  enemyObj.name = 'enemyObj';
+  enemyObj.add( enemyBody );
   enemy.add( enemyFront );
   enemy.add( enemyBox );
+  enemy.add( enemyObj );
   enemyFront.position.set(0,0,10);
 
   enemy.animations = {
@@ -505,7 +510,7 @@ function addEnemy() {
     'models/enemies/zombie2.gltf',
     function ( gltf ) {
       
-      gltf.scene.scale.set(10,10,10);
+      gltf.scene.scale.set(6,6,6);
       
       gltf.animations; // Array<THREE.AnimationClip>
       gltf.scene; // THREE.Scene
@@ -536,19 +541,50 @@ function addEnemy() {
 
       enemies = [];
       enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
 
 
       enemies.forEach((el)=>{
-        el.userData.speed = Math.random();
+        el.userData.speed = enemySpeeds[randomIntFromInterval(0,19)];
+        //console.log(el.userData.speed);
         el.userData.raycaster = new THREE.Raycaster();
         el.userData.seeRaycaster = new THREE.Raycaster();
         el.userData.idleRaycaster = new THREE.Raycaster();
@@ -567,8 +603,9 @@ function addEnemy() {
         el.userData.turn = el.userData.angle[randomIntFromInterval(0,3)]
         el.userData.idle = 'true';
         el.userData.attack = 'false';
-
-        el.add(SkeletonUtils.clone(enemyAll));
+        
+        
+        el.children.filter(el=>el.name=='enemyObj')[0].add(SkeletonUtils.clone(enemyAll));
         
         el.userData.enemyBoxTop = enemyBoxTop.clone();
 
@@ -579,16 +616,14 @@ function addEnemy() {
         el.add(enemy.userData.enemyBoxTop);
 
         el.userData.intersectWorld = false;
-
         
 
+        el.children.find(el=>el.name === 'enemyObj').children.find(el=>el.name === 'enemyAll').children[0].animations = enemyAll.animations;
 
 
+        var zomb = el.children.find(el=>el.name === 'enemyObj').children.find(el=>el.name === 'enemyAll').children[0];
 
-
-        el.children.find(el=>el.name === 'enemyAll').children[0].animations = enemyAll.animations;
-
-        var zomb = el.children.find(el=>el.name === 'enemyAll').children[0];
+        zomb.rotateZ(Math.PI);
 
         el.userData.clock = new THREE.Clock();
 
@@ -601,6 +636,8 @@ function addEnemy() {
 
         el.userData.clip = THREE.AnimationClip.findByName( el.userData.clips, 'walk' );
         el.userData.action = el.userData.mixer.clipAction( el.userData.clip );
+
+        el.userData.action.timeScale = 8*el.userData.speed;
         
         el.userData.action.play();
 
@@ -614,15 +651,45 @@ function addEnemy() {
 
 
       enemies[0].position.set(90, 0, 0);
-      // enemies[1].position.set(90, 0, 0);
-      // enemies[2].position.set(90, 0, 0);
-      // enemies[3].position.set(90, 0, 0);
-      // enemies[4].position.set(90, 0, 0);
-      // enemies[5].position.set(90, 0, 0);
-      // enemies[6].position.set(90, 0, 0);
-      // enemies[7].position.set(90, 0, 0);
-      // enemies[8].position.set(90, 0, 0);
-      // enemies[9].position.set(90, 0, 0);
+      enemies[1].position.set(90, 0, 0);
+      enemies[2].position.set(90, 0, 0);
+      enemies[3].position.set(90, 0, 0);
+      enemies[4].position.set(90, 0, 0);
+      enemies[5].position.set(90, 0, 0);
+      enemies[6].position.set(90, 0, 0);
+      enemies[7].position.set(90, 0, 0);
+      enemies[8].position.set(90, 0, 0);
+      enemies[9].position.set(90, 0, 0);
+      enemies[10].position.set(90, 0, 0);
+      enemies[11].position.set(90, 0, 0);
+      enemies[12].position.set(90, 0, 0);
+      enemies[13].position.set(90, 0, 0);
+      enemies[14].position.set(90, 0, 0);
+      enemies[15].position.set(90, 0, 0);
+      enemies[16].position.set(90, 0, 0);
+      enemies[17].position.set(90, 0, 0);
+      enemies[18].position.set(90, 0, 0);
+      enemies[19].position.set(90, 0, 0);
+      enemies[20].position.set(90, 0, 0);
+      enemies[21].position.set(90, 0, 0);
+      enemies[22].position.set(90, 0, 0);
+      enemies[23].position.set(90, 0, 0);
+      enemies[24].position.set(90, 0, 0);
+      enemies[25].position.set(90, 0, 0);
+      enemies[26].position.set(90, 0, 0);
+      enemies[27].position.set(90, 0, 0);
+      enemies[28].position.set(90, 0, 0);
+      enemies[29].position.set(90, 0, 0);
+      enemies[30].position.set(90, 0, 0);
+      enemies[31].position.set(90, 0, 0);
+      enemies[32].position.set(90, 0, 0);
+      enemies[33].position.set(90, 0, 0);
+      enemies[34].position.set(90, 0, 0);
+      enemies[35].position.set(90, 0, 0);
+      enemies[36].position.set(90, 0, 0);
+      enemies[37].position.set(90, 0, 0);
+      enemies[38].position.set(90, 0, 0);
+      enemies[39].position.set(90, 0, 0);
 
       
       
@@ -677,6 +744,8 @@ function addEnemy() {
 function fightEnemies() {
   
   enemies.forEach((element, indexEn) => {
+
+    
 
     // if ( enemyMixers.length > 0 ) {
     //   for ( var i = 0; i < enemyMixers.length; i ++ ) {
@@ -776,11 +845,11 @@ function fightEnemies() {
       element.userData.raycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.raycaster.ray.origin).length();
 
       element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed));
-      element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
+      element.children.find(el=>el.name === 'enemyObj').lookAt(element.userData.raycaster.ray.origin);
     }
     else if (element.userData.attack && element.userData.idle) {
       element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/2));
-      element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.raycaster.ray.origin);
+      element.children.find(el=>el.name === 'enemyObj').lookAt(element.userData.raycaster.ray.origin);
     }
 
     if (element.position.distanceTo(element.userData.raycaster.ray.origin) < 2) {
@@ -811,15 +880,19 @@ function fightEnemies() {
         }
         
         element.userData.idleRaycaster.set(idleTurn, element.position.clone().normalize());
-        element.children.filter(el => el.name == 'enemyBody')[0].lookAt(element.userData.idleRaycaster.ray.origin);
+        element.children.find(el=>el.name === 'enemyObj').lookAt(element.userData.idleRaycaster.ray.origin);
+
+        
+        
 
         element.position.add(element.userData.idleRaycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed/3));
       }
       
 
       if (bullets.length>0) {
+        
         bullets.forEach((itemB, indexB) => {
-          if (detectCollisionCubes(itemB, element.children.filter(el => el.name == 'enemyBody')[0])) {
+          if (detectCollisionCubes(itemB, element.children.filter(el => el.name == 'enemyObj')[0].children[0])) {
             scene.remove(itemB);
             scene.remove(element);
             bullets.splice(indexB, 1);
