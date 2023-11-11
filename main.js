@@ -72,7 +72,7 @@ let camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 1, 1000);
 camera.position.set(0, 120, 0);
 //camera.lookAt(0,0,0);
 
-var ambient = new THREE.AmbientLight( 0xffffff, 0.9 );
+var ambient = new THREE.AmbientLight( 0xffffff, 1 );
 scene.add( ambient )
 
 light = new THREE.SpotLight( 0xffffff, 1 );
@@ -104,6 +104,7 @@ function init() {
     var materialPlane = new THREE.MeshPhongMaterial({ color: 0xcccccc, side: THREE.DoubleSide })
     plane = new THREE.Mesh ( geometryPlane, materialPlane );
     //plane.receiveShadow = true;
+    plane.position.set(0,-0.5,0);
     scene.add( plane );
 
     const size = 1000;
@@ -378,7 +379,7 @@ function addPlayer() {
 
       playerBox.name = 'playerBox';
       const geometryPlayerBoxLeft = new THREE.BoxGeometry(4,15,2);
-      const materialPlayerBoxLeft = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+      const materialPlayerBoxLeft = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0});
       const playerBoxLeft = new THREE.Mesh( geometryPlayerBoxLeft, materialPlayerBoxLeft);
       playerBoxLeft.name = 'playerBoxLeft';
       playerBoxLeft.position.set(3,0,0);
@@ -386,7 +387,7 @@ function addPlayer() {
       playerBox.add( playerBoxLeft );
 
       const geometryPlayerBoxRight = new THREE.BoxGeometry(4,15,2);
-      const materialPlayerBoxRight = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+      const materialPlayerBoxRight = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0});
       const playerBoxRight = new THREE.Mesh( geometryPlayerBoxRight, materialPlayerBoxRight);
       playerBoxRight.name = 'playerBoxRight';
       playerBoxRight.position.set(-3,0,0);
@@ -394,14 +395,14 @@ function addPlayer() {
       playerBox.add( playerBoxRight );
 
       const geometryPlayerBoxTop = new THREE.BoxGeometry(4,15,2);
-      const materialPlayerBoxTop = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+      const materialPlayerBoxTop = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0});
       const playerBoxTop = new THREE.Mesh( geometryPlayerBoxTop, materialPlayerBoxTop);
       playerBoxTop.name = 'playerBoxTop';
       playerBoxTop.position.set(0,0,3);
       playerBox.add( playerBoxTop );
 
       const geometryPlayerBoxBottom = new THREE.BoxGeometry(4,15,2);
-      const materialPlayerBoxBottom = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+      const materialPlayerBoxBottom = new THREE.MeshLambertMaterial({color: 0xffff00, transparent: true, opacity: 0});
       const playerBoxBottom = new THREE.Mesh( geometryPlayerBoxBottom, materialPlayerBoxBottom);
       playerBoxBottom.name = 'playerBoxBottom';
       playerBoxBottom.position.set(0,0,-3);
@@ -543,43 +544,43 @@ function addEnemy() {
       enemies.push(enemy.clone());
       enemies.push(enemy.clone());
       enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
 
 
       enemies.forEach((el)=>{
@@ -650,46 +651,46 @@ function addEnemy() {
       });
 
 
-      enemies[0].position.set(90, 0, 0);
-      enemies[1].position.set(90, 0, 0);
-      enemies[2].position.set(90, 0, 0);
-      enemies[3].position.set(90, 0, 0);
-      enemies[4].position.set(90, 0, 0);
-      enemies[5].position.set(90, 0, 0);
-      enemies[6].position.set(90, 0, 0);
-      enemies[7].position.set(90, 0, 0);
-      enemies[8].position.set(90, 0, 0);
-      enemies[9].position.set(90, 0, 0);
-      enemies[10].position.set(90, 0, 0);
-      enemies[11].position.set(90, 0, 0);
-      enemies[12].position.set(90, 0, 0);
-      enemies[13].position.set(90, 0, 0);
-      enemies[14].position.set(90, 0, 0);
-      enemies[15].position.set(90, 0, 0);
-      enemies[16].position.set(90, 0, 0);
-      enemies[17].position.set(90, 0, 0);
-      enemies[18].position.set(90, 0, 0);
-      enemies[19].position.set(90, 0, 0);
-      enemies[20].position.set(90, 0, 0);
-      enemies[21].position.set(90, 0, 0);
-      enemies[22].position.set(90, 0, 0);
-      enemies[23].position.set(90, 0, 0);
-      enemies[24].position.set(90, 0, 0);
-      enemies[25].position.set(90, 0, 0);
-      enemies[26].position.set(90, 0, 0);
-      enemies[27].position.set(90, 0, 0);
-      enemies[28].position.set(90, 0, 0);
-      enemies[29].position.set(90, 0, 0);
-      enemies[30].position.set(90, 0, 0);
-      enemies[31].position.set(90, 0, 0);
-      enemies[32].position.set(90, 0, 0);
-      enemies[33].position.set(90, 0, 0);
-      enemies[34].position.set(90, 0, 0);
-      enemies[35].position.set(90, 0, 0);
-      enemies[36].position.set(90, 0, 0);
-      enemies[37].position.set(90, 0, 0);
-      enemies[38].position.set(90, 0, 0);
-      enemies[39].position.set(90, 0, 0);
+      enemies[0].position.set(90, 1, 0);
+      enemies[1].position.set(90, 1, 0);
+      enemies[2].position.set(90, 1, 0);
+      // enemies[3].position.set(90, 0, 0);
+      // enemies[4].position.set(90, 0, 0);
+      // enemies[5].position.set(90, 0, 0);
+      // enemies[6].position.set(90, 0, 0);
+      // enemies[7].position.set(90, 0, 0);
+      // enemies[8].position.set(90, 0, 0);
+      // enemies[9].position.set(90, 0, 0);
+      // enemies[10].position.set(90, 0, 0);
+      // enemies[11].position.set(90, 0, 0);
+      // enemies[12].position.set(90, 0, 0);
+      // enemies[13].position.set(90, 0, 0);
+      // enemies[14].position.set(90, 0, 0);
+      // enemies[15].position.set(90, 0, 0);
+      // enemies[16].position.set(90, 0, 0);
+      // enemies[17].position.set(90, 0, 0);
+      // enemies[18].position.set(90, 0, 0);
+      // enemies[19].position.set(90, 0, 0);
+      // enemies[20].position.set(90, 0, 0);
+      // enemies[21].position.set(90, 0, 0);
+      // enemies[22].position.set(90, 0, 0);
+      // enemies[23].position.set(90, 0, 0);
+      // enemies[24].position.set(90, 0, 0);
+      // enemies[25].position.set(90, 0, 0);
+      // enemies[26].position.set(90, 0, 0);
+      // enemies[27].position.set(90, 0, 0);
+      // enemies[28].position.set(90, 0, 0);
+      // enemies[29].position.set(90, 0, 0);
+      // enemies[30].position.set(90, 0, 0);
+      // enemies[31].position.set(90, 0, 0);
+      // enemies[32].position.set(90, 0, 0);
+      // enemies[33].position.set(90, 0, 0);
+      // enemies[34].position.set(90, 0, 0);
+      // enemies[35].position.set(90, 0, 0);
+      // enemies[36].position.set(90, 0, 0);
+      // enemies[37].position.set(90, 0, 0);
+      // enemies[38].position.set(90, 0, 0);
+      // enemies[39].position.set(90, 0, 0);
 
       
       
@@ -829,7 +830,7 @@ function fightEnemies() {
         }
       };
     })
-    element.userData.seeRaycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
+    element.userData.seeRaycaster.set(new THREE.Vector3(player.position.x, 25, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
     element.userData.seeRaycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.seeRaycaster.ray.origin).length();
 
     /*///////////////////////////////////////////////////////////////////////*/
@@ -841,7 +842,7 @@ function fightEnemies() {
     
 
     if (element.userData.attack && !element.userData.idle) {
-      element.userData.raycaster.set(new THREE.Vector3(player.position.x, 20, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
+      element.userData.raycaster.set(new THREE.Vector3(player.position.x, player.position.y, player.position.z), element.userData.direction.subVectors(element.position, player.position).normalize());
       element.userData.raycaster.far = new THREE.Vector3().subVectors(element.position, element.userData.raycaster.ray.origin).length();
 
       element.position.add(element.userData.raycaster.ray.origin.clone().sub(element.position).normalize().multiplyScalar(element.userData.speed));
