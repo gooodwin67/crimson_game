@@ -68,11 +68,12 @@ window.addEventListener("resize", (event) => {
 stats = new Stats();
 document.body.appendChild( stats.dom );
 
-let camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 1, 1000);
-camera.position.set(0, 120, 0);
+let camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 1, 1000);
+camera.position.set(0, 220, 0);
 //camera.lookAt(0,0,0);
 
-var ambient = new THREE.AmbientLight( 0xffffff, 1 );
+//var ambient = new THREE.AmbientLight( 0x404040);
+var ambient = new THREE.DirectionalLight( 0xffffee, 0.7 );
 scene.add( ambient )
 
 light = new THREE.SpotLight( 0xffffff, 1 );
@@ -543,7 +544,6 @@ function addEnemy() {
       enemies = [];
       enemies.push(enemy.clone());
       enemies.push(enemy.clone());
-      enemies.push(enemy.clone());
       // enemies.push(enemy.clone());
       // enemies.push(enemy.clone());
       // enemies.push(enemy.clone());
@@ -581,6 +581,8 @@ function addEnemy() {
       // enemies.push(enemy.clone());
       // enemies.push(enemy.clone());
       // enemies.push(enemy.clone());
+      // enemies.push(enemy.clone());
+      
 
 
       enemies.forEach((el)=>{
@@ -653,7 +655,7 @@ function addEnemy() {
 
       enemies[0].position.set(90, 1, 0);
       enemies[1].position.set(90, 1, 0);
-      enemies[2].position.set(90, 1, 0);
+      // enemies[2].position.set(90, 1, 0);
       // enemies[3].position.set(90, 0, 0);
       // enemies[4].position.set(90, 0, 0);
       // enemies[5].position.set(90, 0, 0);

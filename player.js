@@ -193,7 +193,7 @@ export const movePlayer = (THREE, scene, player, playerBox, playerFront, playerF
 
 
     camera.position.x = player.position.x;
-    camera.position.z = player.position.z-3;
+    camera.position.z = player.position.z-10;
 
     /*///////////////////////////////////////////////////////////////////////////////////////*/
 
