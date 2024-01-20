@@ -69,19 +69,19 @@ stats = new Stats();
 document.body.appendChild( stats.dom );
 
 let camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 1, 1000);
-camera.position.set(0, 220, 0);
+camera.position.set(0, 320, 0);
 //camera.lookAt(0,0,0);
 
 //var ambient = new THREE.AmbientLight( 0x404040);
 var ambient = new THREE.DirectionalLight( 0xffffee, 0.7 );
 scene.add( ambient )
 
-light = new THREE.SpotLight( 0xffffff, 1 );
-light.position.set(50,20, 0);
-light.penumbra = 1;
-light.power = 2;
-light.decay = 2;
-light.distance = 100;
+//light = new THREE.SpotLight( 0xffffff, 1 );
+// light.position.set(50,20, 0);
+// light.penumbra = 1;
+// light.power = 2;
+// light.decay = 2;
+// light.distance = 100;
 
 
 //scene.add( light );
@@ -137,8 +137,8 @@ function animate() {
 
     if (gameLoaded) {
       movePlayer(THREE, scene, player, playerBox, playerFront, playerFrontBullet, bullets, bullet, camera, city);
-      light.position.set(player.position.x, 20, player.position.z);
-      light.target = player;
+      // light.position.set(player.position.x, 20, player.position.z);
+      // light.target = player;
       camera.lookAt(player.position);
       
       //console.log(player.userData.shoot);
@@ -249,7 +249,7 @@ function addWorld() {
 
   loader.load(
     //'models/world/world3.gltf',
-    'models/world/world3_small.gltf',
+    'models/world/world3_small2.gltf',
     function ( gltf ) {
       
       //gltf.scene.scale.set(100,100,100);
@@ -544,44 +544,44 @@ function addEnemy() {
       enemies = [];
       enemies.push(enemy.clone());
       enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
-      // enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
+      enemies.push(enemy.clone());
       
 
 
@@ -655,44 +655,44 @@ function addEnemy() {
 
       enemies[0].position.set(90, 1, 0);
       enemies[1].position.set(90, 1, 0);
-      // enemies[2].position.set(90, 1, 0);
-      // enemies[3].position.set(90, 0, 0);
-      // enemies[4].position.set(90, 0, 0);
-      // enemies[5].position.set(90, 0, 0);
-      // enemies[6].position.set(90, 0, 0);
-      // enemies[7].position.set(90, 0, 0);
-      // enemies[8].position.set(90, 0, 0);
-      // enemies[9].position.set(90, 0, 0);
-      // enemies[10].position.set(90, 0, 0);
-      // enemies[11].position.set(90, 0, 0);
-      // enemies[12].position.set(90, 0, 0);
-      // enemies[13].position.set(90, 0, 0);
-      // enemies[14].position.set(90, 0, 0);
-      // enemies[15].position.set(90, 0, 0);
-      // enemies[16].position.set(90, 0, 0);
-      // enemies[17].position.set(90, 0, 0);
-      // enemies[18].position.set(90, 0, 0);
-      // enemies[19].position.set(90, 0, 0);
-      // enemies[20].position.set(90, 0, 0);
-      // enemies[21].position.set(90, 0, 0);
-      // enemies[22].position.set(90, 0, 0);
-      // enemies[23].position.set(90, 0, 0);
-      // enemies[24].position.set(90, 0, 0);
-      // enemies[25].position.set(90, 0, 0);
-      // enemies[26].position.set(90, 0, 0);
-      // enemies[27].position.set(90, 0, 0);
-      // enemies[28].position.set(90, 0, 0);
-      // enemies[29].position.set(90, 0, 0);
-      // enemies[30].position.set(90, 0, 0);
-      // enemies[31].position.set(90, 0, 0);
-      // enemies[32].position.set(90, 0, 0);
-      // enemies[33].position.set(90, 0, 0);
-      // enemies[34].position.set(90, 0, 0);
-      // enemies[35].position.set(90, 0, 0);
-      // enemies[36].position.set(90, 0, 0);
-      // enemies[37].position.set(90, 0, 0);
-      // enemies[38].position.set(90, 0, 0);
-      // enemies[39].position.set(90, 0, 0);
+      enemies[2].position.set(90, 1, 0);
+      enemies[3].position.set(90, 0, 0);
+      enemies[4].position.set(90, 0, 0);
+      enemies[5].position.set(90, 0, 0);
+      enemies[6].position.set(90, 0, 0);
+      enemies[7].position.set(90, 0, 0);
+      enemies[8].position.set(90, 0, 0);
+      enemies[9].position.set(90, 0, 0);
+      enemies[10].position.set(90, 0, 0);
+      enemies[11].position.set(90, 0, 0);
+      enemies[12].position.set(90, 0, 0);
+      enemies[13].position.set(90, 0, 0);
+      enemies[14].position.set(90, 0, 0);
+      enemies[15].position.set(90, 0, 0);
+      enemies[16].position.set(90, 0, 0);
+      enemies[17].position.set(90, 0, 0);
+      enemies[18].position.set(90, 0, 0);
+      enemies[19].position.set(90, 0, 0);
+      enemies[20].position.set(90, 0, 0);
+      enemies[21].position.set(90, 0, 0);
+      enemies[22].position.set(90, 0, 0);
+      enemies[23].position.set(90, 0, 0);
+      enemies[24].position.set(90, 0, 0);
+      enemies[25].position.set(90, 0, 0);
+      enemies[26].position.set(90, 0, 0);
+      enemies[27].position.set(90, 0, 0);
+      enemies[28].position.set(90, 0, 0);
+      enemies[29].position.set(90, 0, 0);
+      enemies[30].position.set(90, 0, 0);
+      enemies[31].position.set(90, 0, 0);
+      enemies[32].position.set(90, 0, 0);
+      enemies[33].position.set(90, 0, 0);
+      enemies[34].position.set(90, 0, 0);
+      enemies[35].position.set(90, 0, 0);
+      enemies[36].position.set(90, 0, 0);
+      enemies[37].position.set(90, 0, 0);
+      enemies[38].position.set(90, 0, 0);
+      enemies[39].position.set(90, 0, 0);
 
       
       
